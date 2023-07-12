@@ -1,11 +1,10 @@
-
 # ReactGenie Decorators
 
-> When using **ReactGenie**, developers can use various decorators to declare classes, variables or functions; **ReactGenie** will **automatically process and serialize** related variables according to the developer's description, and **automatically generate functions and LLM prompts** for supporting multimodal input processing according to the description information provided by the developer.
+> Developers can utilize various decorators to declare classes, variables, or functions when using **ReactGenie**. **ReactGenie** will then automatically process and serialize the related variables based on the developer's description. It will also automatically generate functions and LLM prompts to support multimodal input processing according to the provided description information.
 
 ## @GenieClass
 
-GenieClass is a basic decorator for object-oriented programs. Classes with @GenieClass are automatically processed by **ReactGenie**. Developers can declare basic information about the class by adding a description for prompt generation to the class. For example:
+GenieClass is a fundamental decorator for object-oriented programs. Classes with @GenieClass are automatically processed by **ReactGenie**. Developers can declare basic information about the class by adding a description for prompt generation to the class. For example:
 
 ``` typescript filename="DateTime.ts" {3} copy
 import {GenieClass, HelperClass} from "reactgenie-lib"
@@ -16,7 +15,7 @@ export class DateTime extends HelperClass{
 }
 ```
 
-Classes with the **@GenieClass** can create instances using the **CreateObject()**, and the system will automatically call the **setup()** initialize  the data. For more details, please refer to **ReactGenie Functions**.
+Classes with the **@GenieClass** can create instances using the **CreateObject()** function, and the system will automatically call the **setup()** function to initialize the data. For more details, please refer to **ReactGenie Functions**.
 
 Considering the data types of different classes, GenieClass provides two types of classes that can be inherited: **DataClass** and **HelperClass**. <font color='red'>**Please avoid directly inheriting from GenieClass !**</font>
 
@@ -24,9 +23,9 @@ Considering the data types of different classes, GenieClass provides two types o
 
 ### DataClass
 
-A Dataclass is the basic unit for data management, and an instance of a dataclass can be viewed as a record in a database. The property in a Dataclass can be a number, string, boolean, list, DataClass, or a Helperclass. 
+A DataClass is the basic unit for data management, and an instance of a DataClass can be viewed as a record in a database. The property in a DataClass can be a number, string, boolean, list, DataClass, or a HelperClass. 
 
-Each dataclass has a unique key for **ReactGenie** to manage. For each instance, information about the instance can be obtained using **GetObject(key)**. Here is an example for DataClass:
+Each DataClass has a unique key for **ReactGenie** to manage. For each instance, information about the instance can be obtained using **GetObject(key)**. Here is an example for DataClass:
 
 ```typescript filename="Order.ts" {3} copy
 import {GenieClass, DataClass, GenieKey, GenieProperty} from "reactgenie-lib"
@@ -46,13 +45,13 @@ export class Order extends DataClass {
 }
 ```
 
-Complex data types in Dataclass will be stored using Helperclass, otherwise they cannot be serialized and stored correctly.
+Complex data types in DataClass will be stored using HelperClass, otherwise they cannot be serialized and stored correctly.
 
 
 
 ### HelperClass
 
-The helperclass is an auxiliary data storage and processing type that depends on the dataclass. Helperclass will not be stored directly in the database, but are serialized and deserialized as they are stored in and retrieved from the dataclass, helping the dataclass manage complex data types. The property in a Dataclass can be a number, string, boolean, list, DataClass, or a Helperclass. 
+The HelperClass is an auxiliary data storage and processing type that depends on the DataClass. HelperClasses will not be stored directly in the database, but are serialized and deserialized as they are stored in and retrieved from the DataClass, helping the DataClass manage complex data types. The property in a DataClass can be a number, string, boolean, list, DataClass, or a HelperClass. 
 
 HelperClass has no key, but can also be instantiated using **CreatObject()**. Here is an example for HelperClass:
 
@@ -75,7 +74,7 @@ export class OrderItem extends HelperClass {
 
 ## @GenieKey
 
-Geniekey is the identification of ReactGenie for data management, and each DataClass requires a GenieKey. Use @GenieKey to modify the property that is used as the key in the class, which can be used to get the instance after it is created. For example:
+GenieKey is the identifier used by ReactGenie for data management, and each DataClass requires a GenieKey. Use @GenieKey to modify the property that is used as the key in the class, which can be used to get the instance after it is created. For example:
 
 ```typescript filename="Counter.ts" {3} copy
 import {GenieClass, DataClass, GenieKey, GenieProperty} from "reactgenie-lib"
@@ -109,7 +108,7 @@ Counter coin_count = Counter.GetObject({name:"Coin"});
   //coin_count.name: "Coin"
   //coin_count.quantity: 5
 ```
-
+<font color='red'>constructor must contain genie key</font>
 
 
 ## @GenieProperty
@@ -127,13 +126,15 @@ public placedTime: DateTime; //DateTime is a HelperClass
 //...
 ```
 
+<font color='red'>TODO: start with underscore means serialize but not to voice</font>
+
 
 
 ## @GenieFunction
 
-All functions modified by GenieFunction can be called by ReactGenie automatically during multimodal interactions. Developers can add description to the GeniceFunction to state what this function is used for. 
+All functions modified by GenieFunction can be called by ReactGenie automatically during multimodal interactions. Developers can add a description to the GenieFunction to state what this function is used for. 
 
-<font color='red'>**Please notice that each GenieFunction should have a return value.**</font>
+<font color='red'>**Please note that each GenieFunction should have a return value.**</font>
 
 ```typescript filename="Order.ts" {3} copy
 @GenieFunction("Get the total price of the active order.")
@@ -152,4 +153,3 @@ All functions modified by GenieFunction can be called by ReactGenie automaticall
       return this;
     }
 ```
-

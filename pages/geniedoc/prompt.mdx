@@ -1,9 +1,8 @@
+# ReactGenie Prompt Examples
 
-# ReactGenie PromptExamples
+> Developers can provide examples within the class to enhance LLM's understanding of function calls and capabilities. These examples, provided by the developer, will automatically generate prompts for LLM. These prompts will then be used to produce automated responses for multimodal interactions.
 
-> To give LLM a better understanding of function calls and capabilities, developers can give examples in the class for emphasis. The cases given by the developer will automatically generate prompts to be delivered to LLM for automated responses for multimodal interactions.
-
-The examples should be contained in the ModalityProvider.
+These examples should be included in the ModalityProvider.
 
 ```typescript filename="Counter.ts" {3} copy
 export const CounterExamples = [
@@ -37,4 +36,3 @@ export const CounterExamples = [
        //...  
 </ModalityProvider>
 ```
-

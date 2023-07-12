@@ -11,8 +11,14 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: 'https://github.com/shiyt0313/ReactGenieDeveloperStudy',
   footer: {
-    text: 'Nextra Docs Template',
+    text: 'ReactGenie for Developer',
   },
+  useNextSeoProps() {
+    return {
+      titleTemplate: '%s – ReactGenieDEV'
+    }
+  },
+  
 }
 
 export default config
