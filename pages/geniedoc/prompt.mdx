@@ -1,0 +1,40 @@
+
+# ReactGenie PromptExamples
+
+> To give LLM a better understanding of function calls and capabilities, developers can give examples in the class for emphasis. The cases given by the developer will automatically generate prompts to be delivered to LLM for automated responses for multimodal interactions.
+
+The examples should be contained in the ModalityProvider.
+
+```typescript filename="Counter.ts" {3} copy
+export const CounterExamples = [
+  {
+    user_utterance: "increment",
+    example_parsed: "Counter.Current().increment()",
+  },
+  {
+    user_utterance: "what is the count",
+    example_parsed: "Counter.Current().count",
+  },
+  {
+    user_utterance: "what is the count of potato",
+    example_parsed: 'Counter.GetCounter(name: "potato").count',
+  },
+  {
+    user_utterance: "increment potato counter",
+    example_parsed: 'Counter.GetCounter(name: "potato").increment()',
+  },
+  {
+    user_utterance: "show me all vegetables counters",
+    example_parsed: 'Counter.All().matching(field: .type, value: "vegetable")',
+  },
+];
+```
+```typescript filename="App.tsx" {3} copy
+<ModalityProvider
+        examples={CounterExamples}
+        //...>
+          
+       //...  
+</ModalityProvider>
+```
+
