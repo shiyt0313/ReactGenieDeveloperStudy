@@ -6,9 +6,9 @@ const config: DocsThemeConfig = {
   project: {
     link: 'https://github.com/shiyt0313/ReactGenieDeveloperStudy',
   },
-  chat: {
-    link: 'https://discord.com',
-  },
+  // chat: {
+  //   link: 'https://discord.com',
+  // },
   docsRepositoryBase: 'https://github.com/shiyt0313/ReactGenieDeveloperStudy',
   footer: {
     text: 'ReactGenie for Developer',

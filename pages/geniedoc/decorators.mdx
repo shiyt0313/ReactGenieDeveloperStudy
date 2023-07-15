@@ -25,7 +25,7 @@ Considering the data types of different classes, GenieClass provides two types o
 
 A DataClass is the basic unit for data management, and an instance of a DataClass can be viewed as a record in a database. The property in a DataClass can be a number, string, boolean, list, DataClass, or a HelperClass. 
 
-Each DataClass has a unique key for **ReactGenie** to manage. For each instance, information about the instance can be obtained using **GetObject(key)**. Here is an example for DataClass:
+Each DataClass has a unique key (@GenieKey) for **ReactGenie** to manage. For each instance, information about the instance can be obtained using **GetObject(key)**. Here is an example for DataClass:
 
 ```typescript filename="Order.ts" {3} copy
 import {GenieClass, DataClass, GenieKey, GenieProperty} from "reactgenie-lib"
@@ -74,7 +74,8 @@ export class OrderItem extends HelperClass {
 
 ## @GenieKey
 
-GenieKey is the identifier used by ReactGenie for data management, and each DataClass requires a GenieKey. Use @GenieKey to modify the property that is used as the key in the class, which can be used to get the instance after it is created. For example:
+GenieKey is the identifier used by ReactGenie for data management, and each DataClass requires a GenieKey. Use @GenieKey to modify the property that is used as the key in the class, which can be used to get the instance after it is created. The GenieKey property should be pass to constructor while create a new instance.
+For example:
 
 ```typescript filename="Counter.ts" {3} copy
 import {GenieClass, DataClass, GenieKey, GenieProperty} from "reactgenie-lib"
@@ -83,6 +84,8 @@ import {GenieClass, DataClass, GenieKey, GenieProperty} from "reactgenie-lib"
 export class Counter extends DataClass {
     @GenieKey
     @GenieProperty()
+    public id: string;
+    @GenieProperty()
     public name: string;
     @GenieProperty()
     public quantity: int;
@@ -90,35 +93,35 @@ export class Counter extends DataClass {
   	//...
   
   	//functions...
-  	constructor({name, quantity}:{name:string, quantity:int}){
+  	constructor({id, name, quantity}:{id:string, name:string, quantity:int}){
 			super({});
+      this.id = id
       this.name = name;
       this.quantity = quantity;
     }
   
   	static setup(){
-      Counter.CreateObject({name:"Coin", quantity:5});
+      Counter.CreateObject({id:"1",name:"Coin", quantity:5});
     }
 }
 ```
 
 ```typescript copy
 //Get instance
-Counter coin_count = Counter.GetObject({name:"Coin"});
+Counter coin_count = Counter.GetObject({id:"1"});
   //coin_count.name: "Coin"
   //coin_count.quantity: 5
 ```
-<font color='red'>constructor must contain genie key</font>
 
 
 ## @GenieProperty
 
-The GenieProperty modifier is used to modify properties that you want to be accessed and managed by ReactGenie. All members modified with GenieProperty are serialized and stored, and are used for access for multimodal interactions. Developers can also add a description of the property for prompt generation. For example
+The GenieProperty modifier is utilized to alter properties that you wish to be accessed and managed by ReactGenie. Only properties with GenieProperty will be serialized by ReactGenie. If you wish not to serialize a property, you can add an underscore (`_`) to prevent it. All members modified with GenieProperty are serialized, stored, and used for multimodal interactions. Developers also have the option to add a description of the property for prompt generation. For instance,
 
 ```typescript filename="Order.ts" {3} copy
 //...
 @GenieProperty()
-public id: string;
+public _id: string; //id will not be access by voice input
 @GenieProperty("The items in the order.")
 public items: OrderItem[] = [];
 @GenieProperty("The date and time the order was placed.")
@@ -126,7 +129,6 @@ public placedTime: DateTime; //DateTime is a HelperClass
 //...
 ```
 
-<font color='red'>TODO: start with underscore means serialize but not to voice</font>
 
 
 

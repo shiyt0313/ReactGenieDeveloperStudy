@@ -2,6 +2,8 @@
     "getstarted": "Get Started",
     "decorators": "Decorators",
     "functions": "Functions",
-    "prompt": "Prompt Examples"
+    "prompt": "Prompt Examples",
+    "interface": "UI Interface",
+    "preset": "Preset Class"
 
 }
