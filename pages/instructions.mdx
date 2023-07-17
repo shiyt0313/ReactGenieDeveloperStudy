@@ -5,17 +5,168 @@ Please follow these instructions to complete the study.
 ### 1. Information Collection
 At the start of the study, you are required to complete a questionnaire about your experience. The information provided will only be used for analysis in this study and will not be made public.
 
-<font color='red'>This is an editable link</font>
+<font color='red'>Edit link</font>
 [**→ Demographics**](https://docs.google.com/forms/d/1Iqg3z3dGobO6GZey6Czp5DPCdaAv9uf0YsC6eRVtcQU/edit)
 
 ### 2. Study Assignment
---
+#### Build a **MultiTimer** Application with **ReactGenie**
+> To help you complete the development faster, we provide you with the tutorial and some snippets, which you can refer 
+to complete the experimental tasks.
 
-#### Build a **Timer** Application with **ReactGenie**
-<font color='red'>Specific instructions will be inserted here.</font>
+##### 2.1 The goal of MultiTimer
+You need to build a MultiTimer application using ReactGenie. The application needs to support 
+basic timer related operations (start a timer, pause a timer, etc.) and at the same time needs to support 
+possible voice commands from the user. We have given screenshot images of the app and some 
+of the commands that the user may use. Please implement a MultiTimer app that supports multimodal 
+interactions with the help of ReactGenie!
+
+<font color="red">**PIC and CASES here**</font>
+
+
+##### 2.2 Get a boilerplate of ReactGenie
+First, you need to clone ReactGenie's boilerplate from GitHub to the local Timer folder.
+
+```bash filename="run in bash" copy
+git clone git@github.com:StanfordHCI/ReactGenieBoilerplate.git Timer
+```
+Then change the application name in `app.config.js` and `package.json` to `Timer`.
+For example:
+
+```json filename="package.json" {3} copy
+{
+    "name": "Timer",
+    //"name": "template",
+    "version": "0.0.1",
+    "main": "__generated__/AppEntry.js",
+    //...
+}
+```
+```javascript  filename="app.config.js" {3} copy
+export default {
+    expo: {
+        name: "Timer",
+        //name: "template",
+        slug: "Timer",
+        //slug: "template",
+    //...
+    }
+    //...
+}
+```
+
+##### 2.3 Set up .env and dependencies.
+You need to **update the version** of `reactgenie-lib` in `package.json` to the latest version. 
+The version number in the boilerplate has been automatically updated by us. To ensure your 
+development process goes smoothly, you may want to check it again.
+You can view the latest version of `reactgenie-lib` through the link blow.
+
+[**→ reactgenie-lib**](https://www.npmjs.com/package/reactgenie-lib).
+```json filename="package.json" {3} copy
+{
+    "dependencies": {
+        //...
+        "reactgenie-lib": "",// should be latest version
+       //...
+    },
+}
+```
+
+Update your own API Keys for Azure and Open AI.
+Put your credentials into the `.env` file, see `.env.example` for reference.
+
+```bash filename=".env"
+AZURE_SPEECH_REGION=...YourKey
+AZURE_SPEECH_KEY=...YourKey
+OPENAI_API_BASE_URL=...YourKey
+OPENAI_API_KEY=...YourKey
+```
+
+Then you can run project with following commands:
+
+```bash copy
+npm install 
+npx expo start --web
+```
+If there is something wrong with dependencies, you can delete the `node_modules` folder and run it again.
+
+If you see the following content appearing, and the voice recognition is correct when you click on 
+the microphone icon for voice input. This indicates that you can use ReactGenie normally and can 
+start building the Timer.
+
+```
+1
+dataclass template HelperTemp
+HelperClass Template
+```
+
+##### 2.4 Write code for Timer
+You need to create the relevant class in the `genie` folder and write the code for Timer.
+
+With the help of **ReactGenie**, you can mark the content you wish ReactGenie to 
+handle and generate using decorators. **ReactGenie** provides you with two types of data 
+that you can inherit: **DataClass** and **Helperclass**. Please refer to the 
+accompanying documentation on the website for more details.
+
+In the `genie` folder, we have provided examples of **DataClass** and **Helperclass**, you can refer
+ to them to implement your own code.
+
+```bash
+-genie
+    - // Create your own classes under genie.
+    -DataTemp.ts // DataClass Template, need to be deleted.
+    -HelperTemp.ts // HelperClass Template, need to be deleted.
+```
+
+<font color='red'>Simultaneously, the **ReactGenie** library features a **TimeDelta** class (inherited from the 
+**Helperclass**) that can assist you in building the **Timer**. You can refer to the **Preset Class** 
+in the documentation to understand how to use **TimeDelta**.</font>
+
+##### 2.5 Set initialization
+You need to modify `store.ts` to finish initialization. 
+
+If you overload the `setup()` function in the class, it will be automatically called in `initReactGenie()`. 
+If you want to manually complete the initialization, call your initialization function after `initReactGenie()`.
+
+```typescript filename="store.ts" copy
+export const reactGenieStore = initReactGenie();
+//manul set up here
+//Data1.manul_setup()
+//Data2.manul_setup()
+```
+
+You can also rename `stroe.ts` to whatever you want, but don't forget to import it in `App.tsx`
+
+
+##### 2.6 Write GUI for Timer
+You need to write the main UI framework in `App.tsx`. ReactGenie UI must be implemented in `ModalityProvider`,
+ and boilerplate app has already given an example.
+```typescript filename="App.tsx" copy
+<ModalityProvider
+        examples={}//example prompt
+        displayTranscript={true}
+        codexApiKey={ENV.OPENAI_API_KEY!}
+        codexApiBaseUrl={ENV.OPENAI_API_BASE_URL!}
+        azureSpeechRegion={ENV.AZURE_SPEECH_REGION!}
+        azureSpeechKey={ENV.AZURE_SPEECH_KEY!}
+        extraPrompt={''}// extra prompt
+      >
+        // Your own UI
+</ModalityProvider>
+```
+
+You can creat your own GUI or components in `src` folder. 
+
+Then you can declare your UI with GenieClassInterface to facilitate automatic generation. 
+This interface is used tell ReactGenie on which interface to
+display the results. It support an object or a list of objects. Check **UI Interface** in docs for more details.
+
+<font color='red'>Because the style of the UI interface may take a lot of time, and the style is not the 
+focus of this experiment, we provide you with snippets related to style and UI. Check **`Code Snippets`** part 
+for more information.</font>
+
 
 ### 3. Questionnaire 
 Before concluding the study, we would appreciate your feedback on the experiment and the ReactGenie library. Please complete the questionnaire below.
 
-<font color='red'>This is an editable link</font>
+<font color='red'>Edit link</font>
 [**→ Questionnaire for Developer Study**](https://docs.google.com/forms/d/1J-2nxouquKUr7mE4EkTU03aoIcDZglVQNCNBnPX1tl0/edit)
