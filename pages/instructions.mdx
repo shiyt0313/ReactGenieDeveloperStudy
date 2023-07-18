@@ -23,7 +23,7 @@ allow multimodality for users.
 
 
 ##### 2.2 Getting Started
-We have set up a boilerplate ReactGenie app for you to start with. 
+We have put together some starter code for you in the `ReactGenieBoilerplate` repo. 
 Clone ReactGenie's boilerplate from GitHub to a local Timer folder using the command as 
 shown below:
 
@@ -55,10 +55,8 @@ export default {
 }
 ```
 
-##### 2.3 Set up .env and dependencies.
-You need to **update the version** of `reactgenie-lib` in `package.json` to the latest version. 
-The version number in the boilerplate has been automatically updated by us. To ensure your 
-development process goes smoothly, you may want to check it again.
+##### 2.3 Initial Set Up
+1. Please ensure that you have the latest version of `reactgenie-lib` in `package.json`. 
 You can view the latest version of `reactgenie-lib` through the link blow.
 
 [**→ reactgenie-lib**](https://www.npmjs.com/package/reactgenie-lib).
@@ -72,8 +70,8 @@ You can view the latest version of `reactgenie-lib` through the link blow.
 }
 ```
 
-Update your own API Keys for Azure and Open AI.
-Put your credentials into the `.env` file, see `.env.example` for reference.
+2. Update your API Keys for Azure and Open AI in the `.env` file with your credentials. 
+See `.env.example` for reference. You can use the command below to create an .env file with credentials.
 
 ```bash filename=".env"
 AZURE_SPEECH_REGION=...YourKey
@@ -88,7 +86,7 @@ Then you can run project with following commands:
 npm install 
 npx expo start --web
 ```
-If there is something wrong with dependencies, you can delete the `node_modules` folder and run it again.
+If there is something wrong with the dependencies, you can delete the `node_modules` folder and run the command again.
 
 If you see the following content appearing, and the voice recognition is correct when you click on 
 the microphone icon for voice input. This indicates that you can use ReactGenie normally and can 
