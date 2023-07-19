@@ -2,28 +2,31 @@
 
 Please follow these instructions to complete the study.
 
-### 1. Information Collection
+## 1. Demographics
 At the start of the study, you are required to complete a questionnaire about your experience. The information provided will only be used for analysis in this study and will not be made public.
 
 <font color='red'>Edit link</font>
 [**→ Demographics**](https://docs.google.com/forms/d/1Iqg3z3dGobO6GZey6Czp5DPCdaAv9uf0YsC6eRVtcQU/edit)
 
-### 2. Study Assignment
-#### Build a **MultiTimer** Application with **ReactGenie**
+## 2. Study Tasks
+### Build a **Timer** Application with **ReactGenie**
 > To help you complete the development faster, we provide you with the tutorial and some snippets, which you can refer 
 to complete the experimental tasks.
 
-##### 2.1 The goal of MultiTimer
+#### 2.1 Task Description
 You need to build a MultiTimer application using ReactGenie. The application needs to support 
 basic timer related operations (start a timer, pause a timer, etc.) and at the same time needs to support 
 possible voice commands from the user. We have given screenshot images of the app and some 
-of the commands that the user may use. Please implement a MultiTimer app that supports multimodal 
+of the commands that the user may use. Please implement a Timer app that supports multimodal 
 interactions with the help of ReactGenie!
 
 <font color="red">**PIC and CASES here**</font>
 
 
-##### 2.2 Get a boilerplate of ReactGenie
+#### 2.2 Get Started with Boilerplate
+We have provided you with an ReactGenie template as the basis for Timer. Follow the instructions to run a simple cases.
+
+##### 2.2.1 Clone from GitHub
 First, you need to clone ReactGenie's boilerplate from GitHub to the local Timer folder.
 
 ```bash filename="run in bash" copy
@@ -54,8 +57,8 @@ export default {
 }
 ```
 
-##### 2.3 Set up .env and dependencies.
-You need to **update the version** of `reactgenie-lib` in `package.json` to the latest version. 
+##### 2.2.2 Set up .env and dependencies.
+You need to **make sure the version** of `reactgenie-lib` in `package.json` to the latest version. 
 The version number in the boilerplate has been automatically updated by us. To ensure your 
 development process goes smoothly, you may want to check it again.
 You can view the latest version of `reactgenie-lib` through the link blow.
@@ -72,16 +75,17 @@ You can view the latest version of `reactgenie-lib` through the link blow.
 ```
 
 Update your own API Keys for Azure and Open AI.
-Put your credentials into the `.env` file, see `.env.example` for reference.
+You can just copy the file `.env.example` on the Desktop to Timer folder and rename it to `.env` 
+If you can not find `.env.example`, please contact us to get it.
 
 ```bash filename=".env"
-AZURE_SPEECH_REGION=...YourKey
-AZURE_SPEECH_KEY=...YourKey
-OPENAI_API_BASE_URL=...YourKey
-OPENAI_API_KEY=...YourKey
+AZURE_SPEECH_REGION=...key...
+AZURE_SPEECH_KEY=...key...
+OPENAI_API_BASE_URL=...key...
+OPENAI_API_KEY=...key...
 ```
-
-Then you can run project with following commands:
+##### 2.2.3 Run boilerplate
+You can run project with following commands:
 
 ```bash copy
 npm install 
@@ -99,47 +103,287 @@ dataclass template HelperTemp
 HelperClass Template
 ```
 
-##### 2.4 Write code for Timer
-You need to create the relevant class in the `genie` folder and write the code for Timer.
+#### 2.3 Quick Introduction for ReactGenie
 
-With the help of **ReactGenie**, you can mark the content you wish ReactGenie to 
-handle and generate using decorators. **ReactGenie** provides you with two types of data 
-that you can inherit: **DataClass** and **Helperclass**. Please refer to the 
-accompanying documentation on the website for more details.
-
-In the `genie` folder, we have provided examples of **DataClass** and **Helperclass**, you can refer
- to them to implement your own code.
-
+From the boilerplate files, you can see three parts need to be completed for a ReactGenie project, 
+firstly, the **state code** in the genie folder, secondly, the **UI code** in the src file, and finally, 
+the `App.tsx` and `store.ts` responsible for linking the two parts. The state code contains necessary 
+classes for data management and logic control, while the UI code is responsible for building the 
+user interface. 
 ```bash
 -genie
-    - // Create your own classes under genie.
-    -DataTemp.ts // DataClass Template, need to be deleted.
-    -HelperTemp.ts // HelperClass Template, need to be deleted.
+    - //state code
+-src
+    - //UI code
+-App.tsx
+-store.ts
 ```
 
-<font color='red'>Simultaneously, the **ReactGenie** library features a **TimeDelta** class (inherited from the 
-**Helperclass**) that can assist you in building the **Timer**. You can refer to the **Preset Class** 
-in the documentation to understand how to use **TimeDelta**.</font>
+You just need to use **ReactGenie** Decorators to **decorate related classes or members** and **offer some examples**
+ when writing **state code**, 
+and **bound data type** related to the UI when writing **UI code**. ReactGenie will generate commands and execute 
+them automatically when users input voice. The execution results will be automatically displayed with the 
+related UI interface you bounded.
 
-##### 2.5 Set initialization
-You need to modify `store.ts` to finish initialization. 
+<font color='red'>We suggest you start from the state code, first plan the classes that need to 
+be implemented, then write the UI, and finally complete the linkage and testing.</font>
 
-If you overload the `setup()` function in the class, it will be automatically called in `initReactGenie()`. 
-If you want to manually complete the initialization, call your initialization function after `initReactGenie()`.
+We will illustrate this process with a simple counter application, you can build Timer referring to it.
 
-```typescript filename="store.ts" copy
-export const reactGenieStore = initReactGenie();
-//manul set up here
-//Data1.manul_setup()
-//Data2.manul_setup()
+#### 2.4 Write State Code
+
+##### 2.4.1 Create Classes
+First, you need to consider which classes to use to implement a Timer, and then decorate the class or members with
+ReactGenie Decorators.
+
+> For Counter app, we might just need Counter. So we just create `Counter.ts` under `genie`
+```bash
+-genie
+    -Counter.ts
 ```
 
-You can also rename `stroe.ts` to whatever you want, but don't forget to import it in `App.tsx`
+There are four decorators in ReactGenie: **@GenieClass**, **@GenieKey**, **@GenieProperty**, **@GenieFunction**.
+
+For **@GenieClass**, you can declare basic information about the class by adding a description. GenieClass provides 
+two types of classes that can be inherited: **DataClass** and **HelperClass**. 
+<font color='red'>**Please avoid directly inheriting from GenieClass !**</font>
+
+**DataClass**: The basic unit for data management, and an instance of a DataClass can be viewed as a record in a database. 
+The property in a DataClass can be a number, string, boolean, DataClass, HelperClass or a list of them. 
+
+Complex data types in DataClass will be stored using HelperClass, otherwise they cannot be serialized and stored correctly.
+
+**HelperClass**: An auxiliary data storage helping the DataClass manage complex data types. 
+The property in a HelperClass can be a number, string, boolean, DataClass, or HelperClass, or a list of them. 
+
+For example, if you want to record a order and the time when it was created, you might need a **Order (DataClass)** to store
+the information and a **DateTime (HelperClass)** member in Order to manage date. **(Because you cannot put a instance of Date in 
+DataClass.)**
+
+> For Counter, it should be a DataClass.
+```typescript filename="Counter.ts"
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    //...
+}
+```
+
+ReactGenie also provides some preset classes and automatically generated functions, we will introduce them 
+in the following instructions in **2.4.3**.
+
+##### 2.4.2 Decorate Properties
+For the properties of a GenieClass, there are three kinds of decorators.
+
+**@GenieKey**: GenieKey is the identifier used by ReactGenie for data management, 
+and each DataClass requires a GenieKey. But there is no GenieKey in a HelperClass.
+
+When create a new instance of DataClass, you must provide a exclusive GenieKey, then you can get the object by its key.
+
+**@GenieProperty**: GenieProperty allows user to add description to a property. 
+If you wish not to serialize a property, you can add an underscore (`_`) to prevent it. 
+
+> For Counter, we use id as its key and create other two properties: type and count.
+```typescript filename="Counter.ts"
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    @GenieKey
+    @GenieProperty("The id of Counter")
+    public id: number;
+    @GenieProperty("The type of Counter")
+    public type: string;
+    @GenieProperty("The count number")
+    public count: number;
+    //...
+}
+```
+
+**@GenieFunction**: GenieFunction can be called by ReactGenie automatically during multimodal interactions. 
+You can add a description to state what this function is used for. 
+
+Notice:
+1. Using Destructuring parameter for each functions.
+```typescript
+//without Destructuring
+example(a:number, b:number){}
+//with Destructuring
+example({a, b}:{a:number, b:number}){}
+```
+2. The constructor() should not be decorated by **@GenieFunction**
+3. Each @GenieFunction need a explicit return value.
+
+> For Counter, we add increment() and decrement() to it.
+
+```typescript filename="Counter.ts"
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    //...
+    constructor({id, type}:{id:number, type:string}){
+        //...
+    }
+
+    @GenieFunction("Increase the number")
+    increment(): void {
+        //...
+    }
+
+    @GenieFunction("Decrease the number")
+    decrement(): void {
+        //...
+    }
+}
+```
+
+##### 2.4.3 Preset Functions and Classes
+
+ReactGenie also provides some preset classes and automatically generated functions, you can just use them to save
+your time.
+
+**CreateObject(), GetObject(), DeleteObject()**
+
+ReactGenie provides three operations for the object, among which GetObject and DeleteObject are only applicable to 
+DataClass. 
+
+The CreateObject will call the constructor of the class. Please use CreateObject instead of `new` when creating a new object, so as to ensure that the object is correctly 
+serialized. <font color="red">And you need to implement your own creation function based on CreateObject. </font>
+
+At the same time, you can use GenieKey to get and delete the created object.
+
+> We need to add our own object-related method to Counter
+```typescript filename="Counter.ts"
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    //...
+    @GenieFunction()
+    static CreateCounter({id, type}:{id:number, type:string}): Counter{
+        Counter.CreateObject({id:id, type:type})
+        return Counter.GetObject({id:id})
+    }
+
+    @GenieFunction()
+    static GetCounter({id}:{id:number}): Counter{
+        return Counter.GetObject({id:id})
+    }
+
+    @GenieFunction()
+    DeleteCounter(): void{
+        Counter.DeleteObject({id:this.id})
+    }
+}
+```
+
+**setup()**
+
+The setup function is a static function of the GenieClass. You can override the setup function for initial program
+ setup. ReactGenie will automatically call the function to complete the initialization. 
+ 
+> For counter, we can set three counter in the initialization.
+```typescript filename="Counter.ts"
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    //...
+    static setup() {
+        Counter.CreateCounter({id:1, type:"apple"});
+        Counter.CreateCounter({id:2, type:"orange"});
+        Counter.CreateCounter({id:3, type:"banana"});
+    }
+}
+```
+
+**All(), Current()**
+
+All() can get an array of all instances of a specific class and Current() can get the currently active target based on user clicks. 
+
+Only dataclass has All() and Current().
+
+> For Counter, you can automatically update the id for a new counter
+```typescript filename="Counter.ts"
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    //...
+    @GenieFunction()
+    static CreateCounter({type}:{type:string}): Counter{
+        const id = Counter.All().length + 1;
+        Counter.CreateObject({id:id, type:type})
+        return Counter.GetObject({id:id})
+    }
+    //...
+}
+```
+
+<font color='red'>ReactGenie has two preset class **DateTime** and **TimeDelta**, they are both **HelperClass**. 
+You can use it for building Timer or you can build your own time management.</font> You can check the **Preset Class** section to get more information about them.
+
+Here we list some function you might need.
+```typescript filename="TimeDelta"
+//property
+    public hour: number;    // an integer representing hours
+    public minute: number;  // an integer representing minutes
+    public second: number;  // an integer representing seconds
+//functions
+
+// Returns a new instance of TimeDelta.
+// Arguments are optional, defaults are 0 if not provided. 
+// Use to create a new instance of TimeDelta
+CreateTimeDelta({ year?: number, month?: number, day?: number, 
+hour?: number, minute?: number, second?: number}) : TimeDelta;
+
+// Adds an offset to a TimeDelta instance.
+// All arguments are optional and are added to the corresponding properties of the instance
+addOffset({hour?: number, minute?: number, second?: number});
+
+// Returns the total amount of time left in seconds.
+getLeftSecond():number;
+```
+```typescript filename="DateTime"
+static today() : DateTime // Returns today's date as a DateTime object
+```
+#### 2.5 Write UI code
+After completing the state code, we need to consider what kind of interactive UI 
+to build. We recommend considering the data content displayed when constructing the page.
+
+> For Counter, we may need an UI to display the content of a counter, and an UI to display 
+a list of counters. They correspond to an object and a list of objects.
+
+```bash
+-src
+    -CounterView.tsx
+    -CounterListView.tsx
+```
 
 
-##### 2.6 Write GUI for Timer
-You need to write the main UI framework in `App.tsx`. ReactGenie UI must be implemented in `ModalityProvider`,
- and boilerplate app has already given an example.
+To save your development time, we provide you with UI-related snippets.
+
+#### 2.6 Link UI to State Code
+
+After you complete the state code and UI code, you need to bind them together using **GenieClassInterface()** and 
+set up the initialization of ReactGenie. You need to annotate the data type used for display in the corresponding UI,
+ so that when ReactGenie gets the executed results, it will choose the UI to display according to the result type.
+
+> For example, we can bind it like following:
+```typescript filename="CounterView.tsx"
+const CounterViewImpl = (props: { name: string}) => {
+    return (
+        <div>
+        //...
+        </div>
+    )
+}
+
+export const CounterView = GenieClassInterface((counter: Counter) => `${counter.name} Counter`, "Counter", 1)(CounterViewImpl)
+```
+```typescript filename="CounterListView.tsx"
+const CounterListViewImpl = (props: { elements: { name: string }[] }) => {
+    return (
+        <div>
+        //...
+        </div>
+    )
+}
+
+export const CounterListView = GenieClassInterface("Counter", "Counter[]")(CounterListViewImpl)
+```
+
+Then you need to include the main UI framework in `App.tsx`. ReactGenie UI must be implemented in `ModalityProvider`,
 ```typescript filename="App.tsx" copy
 <ModalityProvider
         examples={}//example prompt
@@ -154,15 +398,87 @@ You need to write the main UI framework in `App.tsx`. ReactGenie UI must be impl
 </ModalityProvider>
 ```
 
-You can creat your own GUI or components in `src` folder. 
+And then you need to modify `store.ts` to finish initialization. 
 
-Then you can declare your UI with GenieClassInterface to facilitate automatic generation. 
-This interface is used tell ReactGenie on which interface to
-display the results. It support an object or a list of objects. Check **UI Interface** in docs for more details.
+If you overload the `setup()` function in the class, it will be automatically called in `initReactGenie()`. 
+If you want to manually complete the initialization, call your initialization function after `initReactGenie()`.
 
-<font color='red'>Because the style of the UI interface may take a lot of time, and the style is not the 
-focus of this experiment, we provide you with snippets related to style and UI. Check **`Code Snippets`** part 
-for more information.</font>
+```typescript filename="store.ts" copy
+export const reactGenieStore = initReactGenie();
+//manul set up here
+//Data1.manul_setup()
+//Data2.manul_setup()
+```
+You can also rename `stroe.ts` to whatever you want, but don't forget to import it in `App.tsx`
+
+
+#### 2.7 Add Examples and Test
+Finally, you need to add usage instances for your program to help LLM correctly generate 
+executable results. You can provide examples of relevant function usage in each class and then add it to ModalityProvider.
+
+> For counters, it may be just like this:
+```typescript filename="Counter.ts"
+@GenieClass("A counter")
+export class Counter extends DataClass {
+    //...
+    export const CounterExamples = [
+    {
+        user_utterance: "increment",
+        example_parsed: "Counter.Current().increment()",
+    },
+    {
+        user_utterance: "show me all vegetables counters",
+        example_parsed: 'Counter.All().matching(field: .type, value: "vegetable")',
+    },
+    {
+        user_utterance: "increase me all fruit counters",
+        example_parsed: 'Counter.All().matching(field: .type, value: "fruit").increment()',
+    }]
+}
+```
+```typescript filename="App.tsx" copy
+<ModalityProvider
+        examples={CounterExamples}//example prompt
+        //...
+```
+
+Notice:
+1. The parameters in the cases should not be Destructuring
+```typescript
+//Right
+"Couter.CreateCounter(type:\"fruit\")" 
+//Wrong
+//"Couter.CreateCounter({type:\"fruit\"})"
+```
+
+2. ReactGenie supports some filtering operations on arrays.
+
+**matching(field, value), equal(field, value)**
+
+**between(field, from, to), sort(field, ascending)**
+Note that the field passed to sort() and between() should have a static compare() function.
+
+**contains(field, value)**
+The contains() returns the member whose field value contains the given value.
+
+All this filtering operations return a array.
+
+3. ReactGenie supports some querying operations on arrays.
+
+ReactGenie allows developers to access the properties and functions of list members during execution. 
+This can be used directly to access the properties of the list members.
+
+```typescript copy
+{
+    user_utterance: "Show me all counters type",
+    example_parsed: 'Counter.All().type',
+  },
+  {
+    user_utterance: "Delete all fruit counters",
+    example_parsed: 'Counter.All().matching(field: .type, value: "fruit").DeleteCounter()',
+  },
+```
+
 
 
 ### 3. Questionnaire 
