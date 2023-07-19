@@ -19,11 +19,13 @@ Build a simple timer app that supports basic operations such as starting and pau
 Refer to the UI screenshots below. Additionally, use ReactGenie to integrate voice commands to 
 allow multimodality for users. 
 
+{/* TODO: Add gif instead */}
 <font color="red">**PIC and CASES here**</font>
+![TimerApp](/TimerMain.png) ![TimerForm](/TimerForm.png)
 
 
 ### 2.2 Get Started with Boilerplate
-#### 2.2.1 Clone from GitHub
+#### 2.2.1 Clone Repository
 We have put together some starter code for you in the `ReactGenieBoilerplate` repo. 
 Clone ReactGenie's boilerplate from GitHub to a local Timer folder using the command as 
 shown below:
@@ -81,19 +83,17 @@ AZURE_SPEECH_KEY=...key...
 OPENAI_API_BASE_URL=...key...
 OPENAI_API_KEY=...key...
 ```
-
-#### 2.2.3 Run boilerplate
+#### 2.2.3 Run the Application
 You can run project with following commands:
 
 ```bash copy
 npm install 
 npx expo start --web
 ```
-If there is something wrong with the dependencies, you can delete the `node_modules` folder and run the command again.
+If there are any errors related to dependencies, you can delete the `node_modules` folder 
+and run the command again.
 
-If you see the following content appearing, and the voice recognition is correct when you click on 
-the microphone icon for voice input. This indicates that you can use ReactGenie normally and can 
-start building the Timer.
+You should see the below content:
 
 ```
 1
@@ -101,13 +101,19 @@ dataclass template HelperTemp
 HelperClass Template
 ```
 
-### 2.3 Quick Introduction for ReactGenie
+Test the voice recognition feature by clicking on the microphone and saying something. This indicates that you can use ReactGenie normally and can 
+start building the Timer.
 
-From the boilerplate files, you can see three parts need to be completed for a ReactGenie project, 
-firstly, the **state code** in the genie folder, secondly, the **UI code** in the src file, and finally, 
-the `App.tsx` and `store.ts` responsible for linking the two parts. The state code contains necessary 
-classes for data management and logic control, while the UI code is responsible for building the 
-user interface. 
+### 2.3 TimerApp with ReactGenie Overview
+
+There are three parts that need to be completed to build the Timer App with ReactGenie:
+    1. **State Code**: In the `genie` folder, implement state that controls and manages the Timer
+    2. **UI Code**: In the `src` file, implement the UI for displaying Timer
+    3. **Combine**: Link the State and UI code in `App.tsx` and `store.ts`.
+
+The state code contains necessary classes for data management and logic control, 
+while the UI code is responsible for building the user interface. 
+
 ```bash
 -genie
     - //state code
@@ -117,16 +123,23 @@ user interface.
 -store.ts
 ```
 
-You just need to use **ReactGenie** Decorators to **decorate related classes or members** and **offer some examples**
- when writing **state code**, 
-and **bound data type** related to the UI when writing **UI code**. ReactGenie will generate commands and execute 
-them automatically when users input voice. The execution results will be automatically displayed with the 
-related UI interface you bounded.
+To integrate this with React, you will need to
+    - wrap the classes with **ReactGenie** decorators for related classes or members 
+    - add example voice inputs to **State code**
+    - bound data types to the **UI code**
+With this setup, ReactGenie will generate commands and execute them automatically when users input voice.
+The execution results will be displayed automatically by ReactGenie with respect to the bounded UI interface.
 
-<font color='red'>We suggest you start from the state code, first plan the classes that need to 
-be implemented, then write the UI, and finally complete the linkage and testing.</font>
+Don't worry if this is confusing right now -- we'll provide more detailed instructions below and you can also reference the React Genie documentation for more guidance.
 
-We will illustrate this process with a simple counter application, you can build Timer referring to it.
+Our Recommendation:
+<font color='red'>First plan and implement the state code. 
+Plan the classes that will be needed. After this, 
+implement the UI and integrate the state code with the UI. Then you can test the app.</font>
+
+In the below section, we'll demonstrate how to implement state with ReactGenie for a simple Counter App. Use 
+this as reference to build the state for the Timer app. You can refer to the Requirements section earlier in these docs 
+to outline the necessary elements. 
 
 ### 2.4 Write State Code
 
