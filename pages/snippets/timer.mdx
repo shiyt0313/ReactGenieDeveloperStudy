@@ -15,7 +15,9 @@ Before we get started, here's the file heirarchy for UI code:
 #### commonStyles.ts
 Copy the below styles into new file `src/commonStyles.ts`
 
-```js copy
+<details>
+  <summary> commonStyles.ts </summary>
+  ```js copy
 import {StyleSheet} from "react-native";
 
 const font = {
@@ -146,10 +148,12 @@ export const commonStyles = StyleSheet.create({
     },
 });
 ```
+</details>
 
 ### NewTimerForm.tsx
 Use the below UI to build the New Timer Form in `src/NewTimerForm.tsx`
-
+<details>
+  <summary> NewTimerForm.tsx </summary>
 ```js copy
 import { AppNavigator } from '../App';
 import React, { useState } from 'react';
@@ -196,8 +200,11 @@ const NewTimerFormImpl = (props: {id: string}) => {
 export const NewTimerForm = //ADD YOUR CODE HERE
 
 ```
+</details>
 
 ### TimerItem.tsx
+<details>
+<summary> TimerItem.tsx </summary>
 ```js copy
 import {AppNavigator} from "../App";
 import React, {useEffect, useState} from "react";
@@ -252,9 +259,11 @@ const TimerItemImpl = (props: {id: string}) => {
 export const TimerItem = // Your code here
 
 ```
+</details>
 
 ### TimerView.tsx
-
+<details>
+<summary> TimerView.tsx </summary>
 ```js copy
 import React from "react";
 import {AppNavigator} from "../App";
@@ -286,13 +295,16 @@ export const TimerView = () => {
         </View>
     )
 }
+```
+</details>
 
 You can sort the timers by time left using `a.createdTime.getDate().getTime() - b.createdTime.getDate().getTime()`
 You can use `AppNavigator.push('TimerModal', {id: timer.id})` to open the timer modal when `Add New Timer` button is clicked.
 
 ### App.tsx
-
-```
+<details>
+<summary> App.tsx </summary>
+```js
 import React, { default as ReactFromImport } from "react";
 import { default as ReactReduxFromImport, Provider } from "react-redux";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -369,3 +381,4 @@ const App = () => {
 
 export default App;
 ```
+</details>
