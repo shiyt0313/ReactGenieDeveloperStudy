@@ -9,7 +9,7 @@ information will be used solely for analysis and will not be made public.
 
 [**→ Demographics Questionnaire**](https://docs.google.com/forms/d/1Iqg3z3dGobO6GZey6Czp5DPCdaAv9uf0YsC6eRVtcQU/edit)
 
-## 2. Build a **Timer** Application with **ReactGenie**
+## 2. Build a Timer Application with ReactGenie
 > To help you complete the development faster, we provide you with the tutorial and some 
 snippets, which you can refer to complete the experimental tasks.
 
@@ -152,10 +152,11 @@ to outline the necessary elements.
 ### 2.4 Write State Code
 
 #### 2.4.1 Create Classes
-First, you need to consider which classes to use to implement a Timer, and then decorate the class or members with
-ReactGenie Decorators.
+We'll show you how to build classes with ReactGenie below with a simple Counter App. You can use this as a reference as you 
+consider which classes you'll need to implement for a Timer app. We'll also demonstrate usage of ReactGenie decorators for 
+relevant classes.
 
-> For Counter app, we might just need Counter. So we just create `Counter.ts` under `genie`
+> For Counter app, we'll create a Counter class. Initialize file `Counter.ts` under `genie` folder:
 ```bash
 -genie
     -Counter.ts
@@ -163,20 +164,19 @@ ReactGenie Decorators.
 
 There are four decorators in ReactGenie: **@GenieClass**, **@GenieKey**, **@GenieProperty**, **@GenieFunction**.
 
-For **@GenieClass**, you can declare basic information about the class by adding a description. GenieClass provides 
+**@GenieClass** allows you to declare basic information about the class by adding a description. GenieClass provides 
 two types of classes that can be inherited: **DataClass** and **HelperClass**. 
 <font color='red'>**Please avoid directly inheriting from GenieClass !**</font>
 
-**DataClass**: The basic unit for data management, and an instance of a DataClass can be viewed as a record in a database. 
-The property in a DataClass can be a number, string, boolean, DataClass, HelperClass or a list of them. 
+**DataClass** is the basic unit for data management, and an instance of a DataClass can be viewed as a record in a database. 
+The properties in a DataClass can be a number, string, boolean, DataClass, HelperClass or a list. Complex data 
+types in DataClass will be stored using HelperClass, otherwise they cannot be serialized and stored correctly.
 
-Complex data types in DataClass will be stored using HelperClass, otherwise they cannot be serialized and stored correctly.
+**HelperClass** is an auxiliary data storage helping the DataClass manage complex data types. 
+The properties in a HelperClass can be a number, string, boolean, DataClass, or HelperClass, or a list. 
 
-**HelperClass**: An auxiliary data storage helping the DataClass manage complex data types. 
-The property in a HelperClass can be a number, string, boolean, DataClass, or HelperClass, or a list of them. 
-
-For example, if you want to record a order and the time when it was created, you might need a **Order (DataClass)** to store
-the information and a **DateTime (HelperClass)** member in Order to manage date. **(Because you cannot put a instance of Date in 
+For example, if you wanted to record an order and time, you could create an **Order (DataClass)** to store
+the information and a **DateTime (HelperClass)** to manage date. **(Because you cannot put a instance of Date in 
 DataClass.)**
 
 > For Counter, it should be a DataClass.
@@ -190,7 +190,7 @@ export class Counter extends DataClass{
 ```
 
 ReactGenie also provides some preset classes and automatically generated functions, we will introduce them 
-in the following instructions in **2.4.3**.
+in section **2.4.3**.
 
 #### 2.4.2 Decorate Properties
 For the properties of a GenieClass, there are three kinds of decorators.
