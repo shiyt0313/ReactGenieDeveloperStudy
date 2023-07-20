@@ -14,9 +14,16 @@ information will be used solely for analysis and will not be made public.
 > To help you complete the development faster, we provide you with the tutorial and some 
 snippets, which you can refer to complete the experimental tasks. 
 
-<font color="red">Please ensure that you have carefully read the content of each 
+Please ensure that you have carefully read the content of each 
 instruction before operating, especially pay attention to the notice part, as it 
-contains important details related to the implementation.</font>
+contains important details related to the implementation.
+
+<font color="red">**Only operate or write your own code when you see the hint below to avoid missing 
+important information.**</font>
+
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
 
 ### 2.1 Requirements
 Build a simple timer app that supports basic operations such as starting and pausing the timer. 
@@ -75,6 +82,9 @@ export default {
     //...
 }
 ```
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
 
 #### 2.2.2 Set up .env and dependencies.
 Please ensure that you have the latest version of `reactgenie-lib` in `package.json`. 
@@ -90,6 +100,9 @@ You can view the latest version of `reactgenie-lib` through the link blow.
     },
 }
 ```
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
 
 Update your own API Keys for Azure and Open AI.
 You can just copy the file `.env.example` on the Desktop to Timer folder and rename it to `.env` 
@@ -101,6 +114,9 @@ AZURE_SPEECH_KEY=...key...
 OPENAI_API_BASE_URL=...key...
 OPENAI_API_KEY=...key...
 ```
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
 #### 2.2.3 Run the Application
 You can run project with following commands:
 
@@ -110,6 +126,9 @@ npx expo start --web
 ```
 If there are any errors related to dependencies, you can delete the `node_modules` folder 
 and run the command again.
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
 
 You should see the below content:
 
@@ -123,6 +142,9 @@ Test the voice recognition feature by clicking on the microphone and saying some
 start building the Timer.
 
 ### 2.3 TimerApp with ReactGenie Overview
+We will briefly introduce the framework of Timer to help you understand how to build Timer applications. 
+As a multimodal application, Timer has its own UI and state code. The UI is used to display information and interact,
+and the state code is used to store information and execute functions.
 
 There are three parts that need to be completed to build the Timer App with ReactGenie:
     1. **State Code**: In the `genie` folder, implement state that controls and manages the Timer
@@ -142,7 +164,7 @@ while the UI code is responsible for building the user interface.
 ```
 
 To integrate this with React, you will need to
-    - wrap the classes with **ReactGenie** decorators for related classes or members 
+    - wrap the classes with **ReactGenie** decorators for related classes or members in **State code**
     - add example voice inputs to **State code**
     - bound data types to the **UI code**
 With this setup, ReactGenie will generate commands and execute them automatically when users input voice.
@@ -232,6 +254,9 @@ export class Counter extends DataClass{
     //...
 }
 ```
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
 
 **@GenieFunction**: GenieFunction can be called by ReactGenie automatically during multimodal interactions. 
 You can add a description to state what this function is used for. 
@@ -337,7 +362,7 @@ export class Counter extends DataClass{
 All() can get an array of all instances of a specific class and 
 Current() can get the currently active target based on user clicks. 
 
-You may not need Current() when writing state code, but you may use it when providing prompt examples.
+<font color="red">You do not need Current() when writing state code, but you can use it when providing prompt examples.</font>
 
 Only dataclass has All() and Current().
 
@@ -402,6 +427,10 @@ static today() : DateTime // Returns today's date as a DateTime object
 toString():string;
 //example: dt.toString()
 ```
+
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
 ### 2.5 Write UI code
 After completing the state code, we need to consider what kind of interactive UI 
 to build. We recommend considering the data content displayed when constructing the page.
@@ -814,20 +843,37 @@ const counter: Counter = useGenieSelector(() => {
         return Counter.GetObject(props);
     });
 
-
 <button onClick={() => genieDispatch(() => counter.decrement())}>-</button>
 ```
 
 3. Please use **useState** cautiously and prioritize managing data with ReactGenie.
+4. Don't store data in the UI, please use state code to store data and call the data 
+in the UI. Take counter as an example, we hope that the count data is stored in the 
+Counter, and each time it is modified through access to the function.
+```typescript
+//right
+const count: number = useGenieSelector(() => {
+        return counter.count;
+    });
 
+<button onClick={() => genieDispatch(() => counter.decrement())}>-</button>
 
+//wrong
+//let count = 0;
+
+//<button onClick={() => count = count+1}>-</button>
+```
+
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
 ### 2.6 Link UI to State Code
 
 After you complete the state code and UI code, you need to bind them together using **GenieClassInterface()** and 
 set up the initialization of ReactGenie. You need to annotate the data type used for display in the corresponding UI,
  so that when ReactGenie gets the executed results, it will choose the UI to display according to the result type.
 
-The parameters for GenieClassInterface are: <font color="red">Name(string), DataType(string), Priority(number, 
+The parameters for GenieClassInterface are: <font color="red">PageTitle(string), DataType(string), Priority(number, 
 large means high priority)</font>
 
 > For example, we can bind it like following:
@@ -852,7 +898,7 @@ const CounterListViewImpl = (props: { elements: { name: string }[] }) => {
     )
 }
 
-export const CounterListView = GenieClassInterface("Counter", "Counter[]")(CounterListViewImpl)
+export const CounterListView = GenieClassInterface("Counters", "Counter[]")(CounterListViewImpl)
 ```
 
 Then you need to include the main UI framework in `App.tsx`. 
@@ -873,6 +919,9 @@ ReactGenie UI must be implemented in `ModalityProvider`.
     </ModalityProvider>
 </Provider>
 ```
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
 
 And then you need to modify `store.ts` to finish initialization. 
 
@@ -885,8 +934,11 @@ export const reactGenieStore = initReactGenie();
 //Data1.manul_setup()
 //Data2.manul_setup()
 ```
-You can also rename `stroe.ts` to whatever you want, but don't forget to import it in `App.tsx`
+You can also rename `stroe.ts` to whatever you want, but don't forget to import it in  Provider in `App.tsx`
 
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
 
 ### 2.7 Add Examples and Test
 Finally, you need to add usage instances for your program to help LLM correctly generate 
@@ -953,7 +1005,9 @@ This can be used directly to access the properties of the list members.
   },
 ```
 
-
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
 
 ## 3. Questionnaire 
 Before concluding the study, we would appreciate your feedback on the experiment and the ReactGenie library. Please complete the questionnaire below.
