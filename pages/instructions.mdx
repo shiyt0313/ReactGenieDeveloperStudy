@@ -179,7 +179,7 @@ For example, if you wanted to record an order and time, you could create an **Or
 the information and a **DateTime (HelperClass)** to manage date. **(Because you cannot put a instance of Date in 
 DataClass.)**
 
-> For Counter, it should be a DataClass.
+> For a Counter, we need the DataClass.
 ```typescript filename="Counter.ts" {4}
 import { GenieClass, DataClass } from "reactgenie-lib";
 
@@ -192,13 +192,13 @@ export class Counter extends DataClass{
 ReactGenie also provides some preset classes and automatically generated functions, we will introduce them 
 in section **2.4.3**.
 
-#### 2.4.2 Decorate Properties
-For the properties of a GenieClass, there are three kinds of decorators.
+#### 2.4.2 Decorators
+ReactGenie offers three kinds of decorators.
 
 **@GenieKey**: GenieKey is the identifier used by ReactGenie for data management, 
-and each DataClass requires a GenieKey. But there is no GenieKey in a HelperClass.
-
-When create a new instance of DataClass, you must provide a exclusive GenieKey, then you can get the object by its key.
+and each DataClass requires a GenieKey. There are no GenieKey in a HelperClass. 
+When creating a new instance of DataClass, you must provide an exclusive GenieKey.
+This key will allow you to access the object.
 
 **@GenieProperty**: GenieProperty allows user to add description to a property. 
 If you wish not to serialize a property, you can add an underscore (`_`) to prevent it. 
