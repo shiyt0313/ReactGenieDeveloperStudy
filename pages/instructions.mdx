@@ -139,7 +139,8 @@ To integrate this with React, you will need to
 With this setup, ReactGenie will generate commands and execute them automatically when users input voice.
 The execution results will be displayed automatically by ReactGenie with respect to the bounded UI interface.
 
-Don't worry if this is confusing right now -- we'll provide more detailed instructions below and you can also reference the React Genie documentation for more guidance.
+We'll provide more detailed instructions in the later sections and 
+you can also reference the React Genie documentation for more guidance.
 
 **Our Recommendation:**
 First plan and implement the state code. Plan the classes that will be needed. After this, 
@@ -225,17 +226,17 @@ export class Counter extends DataClass{
 You can add a description to state what this function is used for. 
 
 Notice:
-1. Using Destructuring parameter for each functions.
+1. Use of destructuring parameters for each function.
 ```typescript
-//without Destructuring
+// without Destructuring
 example(a:number, b:number){}
-//with Destructuring
+// with Destructuring
 example({a, b}:{a:number, b:number}){}
 ```
 2. The constructor() should not be decorated by **@GenieFunction**
-3. Each @GenieFunction need a explicit return value.
+3. Each @GenieFunction needs an explicit return value.
 
-> For Counter, we add increment() and decrement() to it.
+> In our Counter class, we implement increment() and decrement() methods.
 
 ```typescript filename="Counter.ts" {11,16}
 import { GenieClass, DataClass } from "reactgenie-lib";
@@ -262,18 +263,18 @@ export class Counter extends DataClass{
 
 #### 2.4.3 Preset Functions and Classes
 
-ReactGenie also provides some preset classes and automatically generated functions, you can just use them to save
-your time.
+ReactGenie also provides some preset classes and functions. You can use these for faster development.
 
 **CreateObject(), GetObject(), DeleteObject()**
 
-ReactGenie provides three operations for the object, among which GetObject and DeleteObject are only applicable to 
-DataClass. 
+ReactGenie provides the above three operations for an object, among which GetObject and DeleteObject are only applicable to 
+DataClass objects. 
 
-The CreateObject will call the constructor of the class. Please use CreateObject instead of `new` when creating a new object, so as to ensure that the object is correctly 
-serialized. <font color="red">And you need to implement your own creation function based on CreateObject. </font>
+CreateObject() will call the constructor of the class. Please use CreateObject instead of `new` when initializing a new object 
+to ensure that the object is correctly serialized. 
+<font color="red">And you need to implement your own create function based on CreateObject. </font>
 
-At the same time, you can use GenieKey to get and delete the created object.
+Additionally, you can use GenieKey to get and delete the created object.
 
 > We need to add our own object-related method to Counter
 ```typescript filename="Counter.ts" {9,15,20}
@@ -306,7 +307,7 @@ export class Counter extends DataClass{
 The setup function is a static function of the GenieClass. You can override the setup function for initial program
  setup. ReactGenie will automatically call the function to complete the initialization. 
  
-> For counter, we can set three counter in the initialization.
+> For counter, we can set up three counters in the initialization.
 ```typescript filename="Counter.ts" {4}
 @GenieClass("A counter example")
 export class Counter extends DataClass{
