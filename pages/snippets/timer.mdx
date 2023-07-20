@@ -162,35 +162,28 @@ import { textStyles, commonStyles } from './commonStyles';
 
 const NewTimerFormImpl = (props: {id: string}) => {
      // Your genie code here
-    const [hour, setHour] = useState("Add your code here");
-    const [min, setMin] = useState("Add your code here");
-    const [sec, setSec] = useState("Add your code here");
-    const [content, setContent] = useState("Add your code here");
-    const [type, setType] = useState("Add your code here");
 
     return (
         <div style={commonStyles.appContainer}>
             <div style={commonStyles.timerFormContainer}>
 
                 <div style={commonStyles.numericInputContainer}>
-                    <input style={commonStyles.numericInput} type='number' min={0} max={60} value={hour} onChange={(e) => setHour(parseInt(e.target.value))}/>
+                    <input style={commonStyles.numericInput} type='number' min={0} max={60} value={/*your code*/} onChange={(e) => {/*your code*/}}/>
                     <label style={textStyles.heading}> : </label>
-                    <input style={commonStyles.numericInput}  type='number' min={0} max={60} value={min}  onChange={(e) => setMin(parseInt(e.target.value))} />
+                    <input style={commonStyles.numericInput}  type='number' min={0} max={60} value={/*your code*/}  onChange={(e) => {/*your code*/}} />
                     <label style={textStyles.heading}> : </label>
-                    <input style={commonStyles.numericInput}  type='number' min={0} max={60} value={sec}  onChange={(e) => setSec(parseInt(e.target.value))} />
+                    <input style={commonStyles.numericInput}  type='number' min={0} max={60} value={/*your code*/}  onChange={(e) => {/*your code*/}} />
                 </div>
 
                 <div style={commonStyles.sectionContainer}>
                     <label style={textStyles.label}>Title </label>
-                    <input style={commonStyles.textInput} type='text' size={20} value={type} onChange={(e)=> setType(e.target.value)} ></input>
+                    <input style={commonStyles.textInput} type='text' size={20} value={} onChange={(e)=> {}} ></input>
                     <label style={textStyles.label}>Description </label>
-                    <input style={commonStyles.textInput} type='text' size={20} value={content} onChange={(e)=> setContent(e.target.value)} ></input>
+                    <input style={commonStyles.textInput} type='text' size={20} value={} onChange={(e)=> {}} ></input>
                 </div>
 
-                <button style={commonStyles.button} onClick={// Do Something}>Back</button>
-                } />
-                <button style={commonStyles.button} onClick={// Do Something}>Back</button>
-                } />
+                <button style={commonStyles.button} onClick={/*Do Something*/}>Back</button>
+                <button style={commonStyles.button} onClick={/*Do Something*/}>Add Timer</button>
 
             </div>
         </div>
@@ -226,7 +219,7 @@ const TimerItemImpl = (props: {id: string}) => {
         // Cleanup function to clear the setInterval when timer stop/unmount
         return () => clearInterval(intervalId);
     }, [// Your code here
-            ]);
+        ]);
    
     return (
         <View style={commonStyles.timerItemContainer}>
@@ -242,16 +235,7 @@ const TimerItemImpl = (props: {id: string}) => {
                 </View>
             </Pressable>
 
-            <button style={commonStyles.button} onClick={() => genieDispatch(() => {
-
-                    if (timer.pause) {
-                        setActionButtonText('Pause')
-                         // Your code here
-                    } else {
-                        setActionButtonText('Start')
-                         // Your code here
-                    }
-                })}>{actionButtonText}</button>
+            <button style={commonStyles.button} onClick={/*Your code here*/}>{actionButtonText}</button>
         </View>
     );
 };
@@ -273,21 +257,20 @@ import {useGenieSelector, genieDispatch} from "reactgenie-lib";
 import { commonStyles } from "./commonStyles";
 import { TimerItem } from "./TimerItem";
 
-export const TimerView = () => {
-
-    const allTimers: // Your code here
-    
-    const timer : // Your code here
+export const TimerView = (props: { elements: { id: string }[]}) => {
 
     return (
         <View style={commonStyles.appContainer}>
             <View>
             <div style={commonStyles.timerViewContainer}>
-                <button style={commonStyles.button} onClick={() => // Your code here
-                }>Add New Timer</button>
+                <button style={commonStyles.button} onClick={() => 
+                
+                // Your code here
+                
+            }>Add New Timer</button>
             </div>
             {
-                allTimers.map((element) => {
+                props.elements.map((element) => {
                         return <TimerItem id={element.id} key={element.id}/>
                 })
             }
@@ -330,8 +313,9 @@ type Props = NativeStackScreenProps<any, any>
 
 const TimerTab = ({route, navigation}: Props) => {
     AppNavigator = navigation
+    const elements; // Your code
     return (
-        <TimerView/>
+        <TimerView elements={elements}/>
     )
 }
 
