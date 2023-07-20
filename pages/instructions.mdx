@@ -7,7 +7,7 @@ Please follow these steps to complete the study.
 Please complete the questionnaire below before moving on to the next step. This 
 information will be used solely for analysis and will not be made public.
 
-[**→ Demographics Questionnaire**](https://docs.google.com/forms/d/1Iqg3z3dGobO6GZey6Czp5DPCdaAv9uf0YsC6eRVtcQU/edit)
+[**→ Demographics Questionnaire**](https://docs.google.com/forms/d/e/1FAIpQLSeFwfHZ20AdljQREseuwGXhjmeYjfKiW2TwGa5zRi5_w56vhw/viewform?usp=sf_link)
 
 ## 2. Build a Timer Application with ReactGenie
 > To help you complete the development faster, we provide you with the tutorial and some 
@@ -385,7 +385,36 @@ a list of counters. They correspond to an object and a list of objects.
 ```
 
 
-To save your development time, we provide you with UI-related snippets.
+To save your development time, we provide you with UI-related snippets. Please refer to the code 
+in Snippets, and copy the UI code that you think is useful to complete the programming.
+
+Notice:
+1. To achieve automatic UI generation from ReactGenie, the code is divided into two 
+parts. The first part involves the specific implementation 
+of the UI, while the second part deals with binding the UI with data types.
+
+```typescript
+//implementation
+const CounterViewImpl = (props: { name: string}) => {return /* */ }
+
+//binding
+export const CounterView = GenieClassInterface((counter: Counter) => `
+${counter.name} Counter`, "Counter", 1)(CounterViewImpl)
+```
+
+2. Please use the useGenieSelector() to obtain ReactGenie data, and call genieDispatch() to modify the UI.
+
+```typescript
+const counter: Counter = useGenieSelector(() => {
+        return Counter.GetObject(props);
+    });
+
+
+<button onClick={() => genieDispatch(() => counter.decrement())}>-</button>
+```
+
+3. Please use **useState** cautiously and prioritize managing data with ReactGenie.
+
 
 ### 2.6 Link UI to State Code
 

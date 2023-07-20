@@ -196,6 +196,7 @@ export const NewTimerForm = //ADD YOUR CODE HERE
 </details>
 
 ### TimerItem.tsx
+TimerItem is an item in TimerList.
 <details>
 <summary> TimerItem.tsx </summary>
 ```js copy
@@ -281,7 +282,6 @@ export const TimerView = (props: { elements: { id: string }[]}) => {
 ```
 </details>
 
-You can sort the timers by time left using `a.createdTime.getDate().getTime() - b.createdTime.getDate().getTime()`
 You can use `AppNavigator.push('TimerModal', {id: timer.id})` to open the timer modal when `Add New Timer` button is clicked.
 
 ### App.tsx
