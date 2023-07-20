@@ -168,7 +168,7 @@ const NewTimerFormImpl = (props: {id: string}) => {
             <div style={commonStyles.timerFormContainer}>
 
                 <div style={commonStyles.numericInputContainer}>
-                    <input style={commonStyles.numericInput} type='number' min={0} max={60} value={/*your code*/} onChange={(e) => {/*your code*/}}/>
+                    <input style={commonStyles.numericInput} type='number' min={0} max={60} value={/*your code*/} onChange={(e) => {/*use e.target.value to get value*/}}/>
                     <label style={textStyles.heading}> : </label>
                     <input style={commonStyles.numericInput}  type='number' min={0} max={60} value={/*your code*/}  onChange={(e) => {/*your code*/}} />
                     <label style={textStyles.heading}> : </label>
@@ -177,9 +177,9 @@ const NewTimerFormImpl = (props: {id: string}) => {
 
                 <div style={commonStyles.sectionContainer}>
                     <label style={textStyles.label}>Title </label>
-                    <input style={commonStyles.textInput} type='text' size={20} value={} onChange={(e)=> {}} ></input>
+                    <input style={commonStyles.textInput} type='text' size={20} value={/*your code*/} onChange={(e)=> {/*your code*/}} ></input>
                     <label style={textStyles.label}>Description </label>
-                    <input style={commonStyles.textInput} type='text' size={20} value={} onChange={(e)=> {}} ></input>
+                    <input style={commonStyles.textInput} type='text' size={20} value={/*your code*/} onChange={(e)=> {/*your code*/}} ></input>
                 </div>
 
                 <button style={commonStyles.button} onClick={/*Do Something*/}>Back</button>
@@ -215,6 +215,7 @@ const TimerItemImpl = (props: {id: string}) => {
 
         const intervalId = setInterval(() => {
             // Your code here
+            // Will be executed every 1000ms
         }, 1000);
 
         // Cleanup function to clear the setInterval when timer stop/unmount
@@ -258,7 +259,7 @@ import {useGenieSelector, genieDispatch} from "reactgenie-lib";
 import { commonStyles } from "./commonStyles";
 import { TimerItem } from "./TimerItem";
 
-export const TimerView = (props: { elements: { id: string }[]}) => {
+export const TimerViewImp = (props: { elements: { id: string }[]}) => {
 
     return (
         <View style={commonStyles.appContainer}>
@@ -279,6 +280,9 @@ export const TimerView = (props: { elements: { id: string }[]}) => {
         </View>
     )
 }
+
+export const TimerView = // Your code here
+
 ```
 </details>
 
@@ -295,7 +299,7 @@ import { StackNavigationOptions } from "@react-navigation/stack/lib/typescript/s
 import { CardStyleInterpolators, createStackNavigator, HeaderStyleInterpolators } from '@react-navigation/stack';
 
 import ENV from "./config";
-import { reactGenieStore } from "./timeStore";
+import { reactGenieStore } from "./store";
 
 import { TimerView } from "./src/TimerView";
 import { NewTimerForm } from "./src/NewTimerForm";

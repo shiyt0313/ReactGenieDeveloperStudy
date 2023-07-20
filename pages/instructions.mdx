@@ -2,6 +2,7 @@
 
 Please follow these steps to complete the study.
 
+
 ## 1. Demographics (Required)
 
 Please complete the questionnaire below before moving on to the next step. This 
@@ -11,12 +12,19 @@ information will be used solely for analysis and will not be made public.
 
 ## 2. Build a Timer Application with ReactGenie
 > To help you complete the development faster, we provide you with the tutorial and some 
-snippets, which you can refer to complete the experimental tasks.
+snippets, which you can refer to complete the experimental tasks. 
+
+<font color="red">Please ensure that you have carefully read the content of each 
+instruction before operating, especially pay attention to the notice part, as it 
+contains important details related to the implementation.</font>
 
 ### 2.1 Requirements
 Build a simple timer app that supports basic operations such as starting and pausing the timer. 
 Refer to the UI screenshots below. Additionally, use ReactGenie to integrate voice commands to 
 allow multimodality for users. 
+
+Users may use a variety of possible interactions, consider the interactions that the user may 
+make to build the entire application, we have given five possible user interaction inputs.
 
 This is the UI of a Timer.
 <img style={{display:"inline-block"}} src="/TimerMain.png" width="45%"/>
@@ -34,6 +42,7 @@ User might use these multimodal interactions:
 * User says "Set the time to one and a half hours."(with pic 2)
 
 ### 2.2 Get Started with Boilerplate
+
 #### 2.2.1 Clone Repository
 We have put together some starter code for you in the `ReactGenieBoilerplate` repo. 
 Clone ReactGenie's boilerplate from GitHub to a local Timer folder using the command as 
@@ -42,7 +51,7 @@ shown below:
 ```bash filename="run in bash" copy
 git clone git@github.com:StanfordHCI/ReactGenieBoilerplate.git Timer
 ```
-Then change the application name in `app.config.js` and `package.json` to `Timer`.
+Then change the application name in `package.json` and `app.config.js` to `Timer`.
 For example:
 
 ```json filename="package.json" {2} copy
@@ -170,15 +179,17 @@ two types of classes that can be inherited: **DataClass** and **HelperClass**.
 <font color='red'>**Please avoid directly inheriting from GenieClass !**</font>
 
 **DataClass** is the basic unit for data management, and an instance of a DataClass can be viewed as a record in a database. 
-The properties in a DataClass can be a number, string, boolean, DataClass, HelperClass or a list. Complex data 
+The properties in a DataClass can be <font color="red">a number, string, boolean, DataClass, HelperClass or a list</font>. Complex data 
 types in DataClass will be stored using HelperClass, otherwise they cannot be serialized and stored correctly.
 
 **HelperClass** is an auxiliary data storage helping the DataClass manage complex data types. 
-The properties in a HelperClass can be a number, string, boolean, DataClass, or HelperClass, or a list. 
+The properties in a HelperClass can be <font color="red">a number, string, boolean, DataClass, or HelperClass, or a list</font>. 
 
 For example, if you wanted to record an order and time, you could create an **Order (DataClass)** to store
 the information and a **DateTime (HelperClass)** to manage date. **(Because you cannot put a instance of Date in 
-DataClass.)**
+DataClass.)** 
+
+You can also view the sample code in `boilerplate/genie` to understand **Dataclass** and **Helperclass**.
 
 > For a Counter, we need the DataClass.
 ```typescript filename="Counter.ts" {4}
@@ -225,7 +236,8 @@ export class Counter extends DataClass{
 **@GenieFunction**: GenieFunction can be called by ReactGenie automatically during multimodal interactions. 
 You can add a description to state what this function is used for. 
 
-Notice:
+<font color="red">**NOTICE:**</font>
+
 1. Use of destructuring parameters for each function.
 ```typescript
 // without Destructuring
@@ -270,7 +282,7 @@ ReactGenie also provides some preset classes and functions. You can use these fo
 ReactGenie provides the above three operations for an object, among which GetObject and DeleteObject are only applicable to 
 DataClass objects. 
 
-CreateObject() will call the constructor of the class. Please use CreateObject instead of `new` when initializing a new object 
+CreateObject() will call the constructor of the class, so **the parameters of CreateObject() is the same as constructor**. Please use CreateObject instead of `new` when initializing a new object 
 to ensure that the object is correctly serialized. 
 <font color="red">And you need to implement your own create function based on CreateObject. </font>
 
@@ -329,6 +341,9 @@ You may not need Current() when writing state code, but you may use it when prov
 
 Only dataclass has All() and Current().
 
+<font color="red">NOTICE: All() and Current() will be generated during execution, so you may receive a warning that 
+the function does not exist when you are writing code. You can just ignore it.</font>
+
 > For example, you can automatically update the id for a new counter
 ```typescript filename="Counter.ts" {6}
 @GenieClass("A counter example")
@@ -344,8 +359,8 @@ export class Counter extends DataClass{
 }
 ```
 
-<font color='red'>ReactGenie has two preset class **DateTime** and **TimeDelta**, they are both **HelperClass** objects. 
-You can use these to help you build the Timer or you can build your own time management.</font> You can check the **Preset Class** section to get more information about them.
+ReactGenie has two preset class <font color='red'>**DateTime**</font> and <font color='red'>**TimeDelta**</font>, they are both **HelperClass** objects. 
+You can use these to help you build the Timer or you can build your own time management. You can check the **Preset Class** section to get more information about them.
 
 Here we list some function you might need.
 ```typescript filename="TimeDelta"
@@ -358,18 +373,34 @@ Here we list some function you might need.
 // Returns a new instance of TimeDelta.
 // Arguments are optional, defaults are 0 if not provided. 
 // Use to create a new instance of TimeDelta
-CreateTimeDelta({ year?: number, month?: number, day?: number, 
-hour?: number, minute?: number, second?: number}) : TimeDelta;
+static CreateTimeDelta({hour?: number, minute?: number, second?: number}) : TimeDelta;
+//example: TimeDelta.CreateTimeDelta({hour:0, minute:0, second:0})
 
 // Adds an offset to a TimeDelta instance.
 // All arguments are optional and are added to the properties of the instance
 addOffset({hour?: number, minute?: number, second?: number});
+//example: td.addOffset({hour:1, minute:0, second:0})
+
+// Sets time to a TimeDelta instance.
+// All arguments are optional and are seted to the properties of the instance
+setTime({hour?: number, minute?: number, second?: number});
+//example: td.setTime({hour:1, minute:0, second:0})
 
 // Returns the total amount of time left in seconds.
 getLeftSecond():number;
+//example: td.getLeftSecond()
+
+//Get the cotent of TimeDelta
+toString():string;
+//example: td.toString()
 ```
 ```typescript filename="DateTime"
 static today() : DateTime // Returns today's date as a DateTime object
+//example: DateTime.today()
+
+//Get the cotent of DateTime
+toString():string;
+//example: dt.toString()
 ```
 ### 2.5 Write UI code
 After completing the state code, we need to consider what kind of interactive UI 
@@ -384,18 +415,390 @@ a list of counters. They correspond to an object and a list of objects.
     -CounterListView.tsx
 ```
 
+To save your development time, we provide you with UI-related snippets. 
+Please refer to them for React and CSS code for the Timer app.
 
-To save your development time, we provide you with UI-related snippets in the code snippets tab of this documentation. 
-Please refer to that for React and CSS code for the Timer app.
+Disclaimer: the below code snippets only consist of React/Typescript and CSS. You will need to integrate 
+ReactGenie yourself for this to be fully functional.
 
-Notice:
+Before we get started, here's the file heirarchy for UI code:
+```
+--src
+----commonStyles.ts
+----NewTimerForm.tsx
+----TimerItem.tsx
+----TimerView.tsx
+--App.tsx
+```
+
+#### commonStyles.ts
+Copy the below styles into new file `src/commonStyles.ts`
+
+<details>
+  <summary> commonStyles.ts </summary>
+  ```js copy
+import {StyleSheet} from "react-native";
+
+const font = {
+    fontFamily: 'Tahoma',
+    letterSpacing: 1.3,
+}
+
+export const textStyles = StyleSheet.create({
+    heading: {
+        ...font,
+        letterSpacing: 1.3,
+        color: 'white',
+        fontSize: 50,
+        fontWeight: '600',
+    },
+    heading2: {
+        ...font,
+        color: '#074057',
+        fontWeight: '600',
+        fontSize: 35,
+    },
+    heading3: {
+        ...font,
+        color: '#074057',
+        fontWeight: '600',
+        fontSize: 35,
+    },
+    label: {
+        ...font,
+        color: 'white',
+        marginTop: 20,
+        marginBottom: 10,
+    },
+    text: {
+        ...font,
+        fontSize: 16,
+        color: '#455055',
+    },
+    subtitle: {
+        ...font,
+    }
+})
+
+export const commonStyles = StyleSheet.create({
+    // Containers
+    appContainer: {
+        backgroundColor: '#0b3f55',
+        paddingLeft: '10%',
+        paddingRight: '10%',
+        minHeight: '100%',
+    },
+    mainContainer: {
+        flex: 1,
+        paddingLeft: '10%',
+        paddingRight: '10%',
+    },
+    timerViewContainer: {
+        marginTop: 20,
+        marginBottom: 20,
+    },
+    timerItemContainer: {
+        flex: 1,
+        width: '100%',
+        marginTop: 20,
+        padding: 20,
+        borderRadius: 6,
+        backgroundColor: '#e7f9ff',
+        textAlignVertical: 'center',
+    },
+    timerFormContainer: {
+        textAlign: 'center',
+        height: '100%',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    sectionContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        marginBottom: 20,
+        width: '100%',
+    },
+    // Common Elements
+    button: {
+        width: '100%',
+        padding: 10,
+        border: 'none',
+        cursor: 'pointer',
+        backgroundColor: '#5a8ca1',
+        color: '#e6f8fe',
+        fontWeight: 'bold',
+        fontSize: "28px",
+        borderRadius: 6,
+        marginTop: 20,
+        ...font
+    },
+    inline: {
+        flex: 2,
+        width: '100%',
+        justifyContent: 'space-between',
+        height: '100%',
+        flexDirection: 'row',
+        marginBottom: 10,
+    },
+    // Add New Timer Form
+    numericInputContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    numericInput: {
+        ...textStyles.heading,
+        padding: 10,
+        margin: 2,
+        border: 'none',
+        textAlign: 'center',
+        backgroundColor: 'transparent',
+    },
+    textInput: {
+        ...textStyles.text,
+        padding: 15,
+        border: 'none',
+        width: 'calc(100% - 30px)',
+        backgroundColor: '#c7f1ff',
+        borderRadius: 6,
+    },
+});
+```
+</details>
+
+#### NewTimerForm.tsx
+Use the below UI to build the New Timer Form in `src/NewTimerForm.tsx`
+<details>
+  <summary> NewTimerForm.tsx </summary>
+```js copy
+import { AppNavigator } from '../App';
+import React, { useState } from 'react';
+import { textStyles, commonStyles } from './commonStyles';
+
+
+const NewTimerFormImpl = (props: {id: string}) => {
+     // Your genie code here
+
+    return (
+        <div style={commonStyles.appContainer}>
+            <div style={commonStyles.timerFormContainer}>
+
+                <div style={commonStyles.numericInputContainer}>
+                    <input style={commonStyles.numericInput} type='number' min={0} max={60} value={/*your code*/} onChange={(e) => {/*use e.target.value to get value*/}}/>
+                    <label style={textStyles.heading}> : </label>
+                    <input style={commonStyles.numericInput}  type='number' min={0} max={60} value={/*your code*/}  onChange={(e) => {/*your code*/}} />
+                    <label style={textStyles.heading}> : </label>
+                    <input style={commonStyles.numericInput}  type='number' min={0} max={60} value={/*your code*/}  onChange={(e) => {/*your code*/}} />
+                </div>
+
+                <div style={commonStyles.sectionContainer}>
+                    <label style={textStyles.label}>Title </label>
+                    <input style={commonStyles.textInput} type='text' size={20} value={/*your code*/} onChange={(e)=> {/*your code*/}} ></input>
+                    <label style={textStyles.label}>Description </label>
+                    <input style={commonStyles.textInput} type='text' size={20} value={/*your code*/} onChange={(e)=> {/*your code*/}} ></input>
+                </div>
+
+                <button style={commonStyles.button} onClick={/*Do Something*/}>Back</button>
+                <button style={commonStyles.button} onClick={/*Do Something*/}>Add Timer</button>
+
+            </div>
+        </div>
+    );
+};
+
+export const NewTimerForm = //ADD YOUR CODE HERE
+
+```
+</details>
+
+#### TimerItem.tsx
+TimerItem is an item in TimerList.
+<details>
+<summary> TimerItem.tsx </summary>
+```js copy
+import {AppNavigator} from "../App";
+import React, {useEffect, useState} from "react";
+import {Pressable, Text, View} from "react-native";
+import { commonStyles, textStyles } from './commonStyles';
+
+const TimerItemImpl = (props: {id: string}) => {
+    const [actionButtonText, setActionButtonText] = useState("Start");
+     // Your genie code here
+
+    useEffect(() => {
+        // If the timer is 0, we don't need to decrease it further
+        // Your code here
+
+        const intervalId = setInterval(() => {
+            // Your code here
+            // Will be executed every 1000ms
+        }, 1000);
+
+        // Cleanup function to clear the setInterval when timer stop/unmount
+        return () => clearInterval(intervalId);
+    }, [// Your code here
+        ]);
+   
+    return (
+        <View style={commonStyles.timerItemContainer}>
+
+            <Pressable onPress={() => {AppNavigator.push('TimerModal', {id: props.id})}}>
+                <View style={commonStyles.inline}>
+                    <Text style={textStyles.heading2}> // Your code here</Text>
+                    <Text style={textStyles.heading3}> // Your code here </Text>
+                </View>
+                <View style={commonStyles.inline}>
+                    <Text style={textStyles.text}> // Your code here </Text>
+                    <Text style={textStyles.text}> // Your code here </Text>
+                </View>
+            </Pressable>
+
+            <button style={commonStyles.button} onClick={/*Your code here*/}>{actionButtonText}</button>
+        </View>
+    );
+};
+
+export const TimerItem = // Your code here
+
+```
+</details>
+
+#### TimerView.tsx
+<details>
+<summary> TimerView.tsx </summary>
+```js copy
+import React from "react";
+import {AppNavigator} from "../App";
+import {Timer} from "../genie/Timer";
+import {View} from "react-native";
+import {useGenieSelector, genieDispatch} from "reactgenie-lib";
+import { commonStyles } from "./commonStyles";
+import { TimerItem } from "./TimerItem";
+
+export const TimerViewImp = (props: { elements: { id: string }[]}) => {
+
+    return (
+        <View style={commonStyles.appContainer}>
+            <View>
+            <div style={commonStyles.timerViewContainer}>
+                <button style={commonStyles.button} onClick={() => 
+                
+                // Your code here
+                
+            }>Add New Timer</button>
+            </div>
+            {
+                props.elements.map((element) => {
+                        return <TimerItem id={element.id} key={element.id}/>
+                })
+            }
+            </View>
+        </View>
+    )
+}
+
+export const TimerView = // Your code here
+
+```
+</details>
+
+You can use `AppNavigator.push('TimerModal', {id: timer.id})` to open the timer modal when `Add New Timer` button is clicked.
+
+#### App.tsx
+<details>
+<summary> App.tsx </summary>
+```js
+import React, { default as ReactFromImport } from "react";
+import { default as ReactReduxFromImport, Provider } from "react-redux";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { StackNavigationOptions } from "@react-navigation/stack/lib/typescript/src/types";
+import { CardStyleInterpolators, createStackNavigator, HeaderStyleInterpolators } from '@react-navigation/stack';
+
+import ENV from "./config";
+import { reactGenieStore } from "./store";
+
+import { TimerView } from "./src/TimerView";
+import { NewTimerForm } from "./src/NewTimerForm";
+
+
+console.log("React is ReactFromModule", ReactFromModule === ReactFromImport);
+console.log(
+  "ReactRedux is ReactReduxFromModule: ",
+  ReactReduxFromImport === ReactReduxFromModule
+);
+
+export let AppNavigator: any = null;
+
+type Props = NativeStackScreenProps<any, any>
+
+const TimerTab = ({route, navigation}: Props) => {
+    AppNavigator = navigation
+    const elements; // Your code
+    return (
+        <TimerView elements={elements}/>
+    )
+}
+
+const TimerModalTab = ({route, navigation}: Props) => {
+    AppNavigator = navigation
+    return (
+          <NewTimerForm {...route.params}/>
+    )
+}
+
+const cardStyle: StackNavigationOptions = {
+    presentation: 'card' ,
+    animationEnabled: true,
+    headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+    cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+}
+
+const modalStyle: StackNavigationOptions = {
+    presentation: 'modal' ,
+    animationEnabled: true,
+    headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+    cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+    headerShown: false,
+    animationTypeForReplace: 'pop',
+}
+
+const App = () => {
+    let TimerStack = () => {
+        let TimerNavigator = createStackNavigator();
+        return (
+            <TimerNavigator.Navigator screenOptions={{
+                headerShown: true
+            }}>
+                <TimerNavigator.Screen name="Timers" component={TimerTab} options={cardStyle}/>
+                <TimerNavigator.Screen name="TimerModal" component={TimerModalTab} options={modalStyle}  />
+            
+            </TimerNavigator.Navigator >
+        );
+    }
+
+  return (
+    // Your code here
+          <TimerStack/>
+    // Your code here
+  );
+};
+
+export default App;
+```
+</details>
+
+<font color="red">NOTICE:</font>
 1. To achieve automatic UI generation from ReactGenie, the code is divided into two 
 parts. The first part involves the specific implementation 
 of the UI, while the second part deals with binding the UI with data types.
 
 ```typescript
+import {GenieClassInterface} from "reactgenie-lib"
 //implementation
-const CounterViewImpl = (props: { name: string}) => {return /* */ }
+const CounterViewImpl = (props: { name: string}) => {return /* UI code */ }
 
 //binding
 export const CounterView = GenieClassInterface((counter: Counter) => `
@@ -405,6 +808,8 @@ ${counter.name} Counter`, "Counter", 1)(CounterViewImpl)
 2. Please use the useGenieSelector() to obtain ReactGenie data, and call genieDispatch() to modify the UI.
 
 ```typescript
+import {useGenieSelector, genieDispatch} from "reactgenie-lib"
+
 const counter: Counter = useGenieSelector(() => {
         return Counter.GetObject(props);
     });
@@ -422,12 +827,15 @@ After you complete the state code and UI code, you need to bind them together us
 set up the initialization of ReactGenie. You need to annotate the data type used for display in the corresponding UI,
  so that when ReactGenie gets the executed results, it will choose the UI to display according to the result type.
 
+The parameters for GenieClassInterface are: <font color="red">Name(string), DataType(string), Priority(number, 
+large means high priority)</font>
+
 > For example, we can bind it like following:
 ```typescript filename="CounterView.tsx" {9,10}
 const CounterViewImpl = (props: { name: string}) => {
     return (
         <div>
-        //...
+        //UI code
         </div>
     )
 }
@@ -439,7 +847,7 @@ export const CounterView = GenieClassInterface((counter: Counter) =>
 const CounterListViewImpl = (props: { elements: { name: string }[] }) => {
     return (
         <div>
-        //...
+        //UI code
         </div>
     )
 }
@@ -447,19 +855,23 @@ const CounterListViewImpl = (props: { elements: { name: string }[] }) => {
 export const CounterListView = GenieClassInterface("Counter", "Counter[]")(CounterListViewImpl)
 ```
 
-Then you need to include the main UI framework in `App.tsx`. ReactGenie UI must be implemented in `ModalityProvider`,
+Then you need to include the main UI framework in `App.tsx`. 
+ReactGenie UI must be implemented in `ModalityProvider`.
+
 ```typescript filename="App.tsx" {10} copy
-<ModalityProvider
-        examples={}//example prompt
-        displayTranscript={true}
-        codexApiKey={ENV.OPENAI_API_KEY!}
-        codexApiBaseUrl={ENV.OPENAI_API_BASE_URL!}
-        azureSpeechRegion={ENV.AZURE_SPEECH_REGION!}
-        azureSpeechKey={ENV.AZURE_SPEECH_KEY!}
-        extraPrompt={''}// extra prompt
-      >
-        // Your own UI
-</ModalityProvider>
+<Provider store={reactGenieStore}>//load your own store
+    <ModalityProvider
+            examples={}//example prompt
+            displayTranscript={true}
+            codexApiKey={ENV.OPENAI_API_KEY!}
+            codexApiBaseUrl={ENV.OPENAI_API_BASE_URL!}
+            azureSpeechRegion={ENV.AZURE_SPEECH_REGION!}
+            azureSpeechKey={ENV.AZURE_SPEECH_KEY!}
+            extraPrompt={''}// extra prompt
+        >
+            // Your own UI
+    </ModalityProvider>
+</Provider>
 ```
 
 And then you need to modify `store.ts` to finish initialization. 
@@ -504,7 +916,7 @@ import { CounterExamples } from "./genie/counter";
         //...
 ```
 
-Notice:
+<font color="red">NOTICE:</font>
 1. The parameters in the cases should not be Destructuring
 ```typescript
 //Right
