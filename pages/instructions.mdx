@@ -452,25 +452,23 @@ executable results. You can provide examples of relevant function usage in each 
 
 > For counters, it may be just like this:
 ```typescript filename="Counter.ts"
-@GenieClass("A counter")
-export class Counter extends DataClass {
-    //...
-    export const CounterExamples = [
-    {
-        user_utterance: "increment",
-        example_parsed: "Counter.Current().increment()",
-    },
-    {
-        user_utterance: "show me all vegetables counters",
-        example_parsed: 'Counter.All().matching(field: .type, value: "vegetable")',
-    },
-    {
-        user_utterance: "increase me all fruit counters",
-        example_parsed: 'Counter.All().matching(field: .type, value: "fruit").increment()',
-    }]
-}
+export const CounterExamples = [
+{
+    user_utterance: "increment",
+    example_parsed: "Counter.Current().increment()",
+},
+{
+    user_utterance: "show me all vegetables counters",
+    example_parsed: 'Counter.All().matching(field: .type, value: "vegetable")',
+},
+{
+    user_utterance: "increase me all fruit counters",
+    example_parsed: 'Counter.All().matching(field: .type, value: "fruit").increment()',
+}]
 ```
 ```typescript filename="App.tsx" copy
+import { CounterExamples } from "./genie/counter";
+
 <ModalityProvider
         examples={CounterExamples}//example prompt
         //...
