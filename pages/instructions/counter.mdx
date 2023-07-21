@@ -1,0 +1,584 @@
+## 2. Tutorial: Counter
+Welcome to the Counter app tutorial. This page will introduce you to all the ReactGenie concepts you'll need for this study and guide you in building a simple Counter with ReactGenie.
+
+### 2.1 ReactGenie Overview
+We'll start with a brief introduction to the ReactGenie framework to help you understand how to build applications.
+
+Each app built with ReactGenie, as a multimodal application, consists of three parts:
+
+1. **State Code**: This is used to control and manage the app, such as managing data and executing functions. It is written in the <font color="red">`genie`</font> folder.
+
+2. **UI Code**: This is used to display information and interact with the user. It is written in the <font color="red">`src`</font> folder.
+
+3. **Combine**: This involves linking the State and UI code in <font color="red">`App.tsx`</font> and <font color="red">`store.ts`</font>.
+
+For example, the state code for the upcoming Counter includes the Counter class for count management, while the UI code CounterView is for displaying the specific counter interface.
+
+ ```bash {2,5}
+-genie
+    - //state code
+    - Counter.ts
+-src
+    - //UI code
+    - CounterView.tsx
+-App.tsx
+-store.ts
+```
+
+<font color="red">**TODO: add a structure picture**</font>
+
+To integrate this with React, you will need to:
+    - Wrap the classes with **ReactGenie** decorators for related classes or members in **State code**
+    - Add example voice inputs to **State code**
+    - Bind data types to the **UI code**
+With this setup, ReactGenie will generate commands and execute them automatically when users input voice commands. The execution results will be automatically displayed by ReactGenie according to the bound UI interface.
+
+We'll provide more detailed instructions in the later sections, and you can also refer to the React Genie documentation for additional guidance.
+
+In the following section, we'll demonstrate how to implement a simple Counter App with ReactGenie. We'll first plan and implement the state code, then plan the necessary classes. After this, we'll implement the UI and integrate the state code with the UI. Finally, you can test the app.
+### 2.2 Environment Check
+We have prepared some starter code for you in the <font color="red">`ReactGenieBoilerplate`</font> repository. 
+
+We will construct a new Counter using this boilerplate. Before we begin, we need to ensure that ReactGenie is functioning properly. You can run the project using the following commands:
+
+```bash copy
+npm install 
+npx expo start --web 
+```
+If you encounter any errors related to dependencies, you can delete the <font color="red">`node_modules`</font> folder and rerun the command.
+
+You should see the following content:
+
+```
+1
+dataclass template HelperTemp
+HelperClass Template
+```
+
+Test the voice recognition feature by clicking on the microphone and saying something. If it works, this indicates that ReactGenie is functioning as expected and you can begin building the Timer.
+
+### 2.3 Create GenieClass
+We first need to consider which classes we will have to implement for a Counter app, so we will start with GenieClass. 
+GenieClass is one of the decorators in ReactGenie. There are decorators in ReactGenie: 
+
+**@GenieClass**, **@GenieKey**, **@GenieProperty**, **@GenieFunction**.
+
+We will introduce the other three later, and now let's focus on  **@GenieClass**.
+
+**@GenieClass** allows you to declare basic information about the class by adding a description. GenieClass provides 
+two types of classes that can be inherited: **DataClass** and **HelperClass**. 
+<font color='red'>**Please avoid directly inheriting from GenieClass !**</font>
+
+**DataClass** is the basic unit for data management, and an instance of a DataClass can be viewed as a record in a database. 
+The properties in a DataClass can be <font color="red">a number, string, boolean, DataClass, HelperClass or a list of these</font>. 
+
+If we want have some complex data types in DataClass, then we need HelperClass, otherwise they cannot be serialized and stored correctly.
+
+**HelperClass** is an auxiliary data storage helping the DataClass manage complex data types. 
+The properties in a HelperClass can be <font color="red">a number, string, boolean, DataClass, or HelperClass, or a list of them</font>. 
+
+Let's give an example to help you understand the relationship between Dataclass and Helperclass. 
+Suppose we want to write a food ordering app. To maintain the user's order, we need to construct 
+an **Order Dataclass**, which stores the food ordered by the users and their quantity. At the same time, 
+we hope to **save when the user make this order**. But we **can't directly use Date** because it is a complex 
+data type of the Typescript and **can't be a member of the Dataclass**. Therefore, we can create **a Helperclass 
+called DateTime** to save the year, month, and day and other time information. 
+
+**Helperclass seems like an assistant to Dataclass in managing complex data, therefore it's called a Helper.**
+
+<font color="red">**TODO: pic for dataclass and Helperclass**</font>
+
+> For Counter app, we'll create a Counter class. Initialize file <font color="red">`Counter.ts`</font> under <font color="red">`genie`</font> folder:
+```bash
+-genie
+    -Counter.ts
+```
+
+Counter should be a Dataclass, we can add description in the **@GenieClass** decorator to help ReactGenie better understand 
+the role of Counter. In the counter, We create type, name and count.
+
+```typescript filename="Counter.ts" {4}
+import { GenieClass, DataClass } from "reactgenie-lib";
+
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    public name:string;
+    public type:string;
+    public count:number;
+}
+```
+
+Next, we are going to introduce you to two decorators used for property decorate.
+
+**@GenieKey**: GenieKey is the identifier used by ReactGenie for data management, 
+and each DataClass requires a GenieKey. There are no GenieKey in a HelperClass. 
+When creating a new instance of DataClass, <font color="red">you must provide an exclusive GenieKey.</font>
+This key will allow you to access the object.
+
+**@GenieProperty**: GenieProperty allows user to add description to a property. 
+If you wish not to serialize a property, you can add an underscore (<font color="red">`_`</font>)to the variable name to prevent it. 
+
+You may wonder in the previous example of Order and DateTime **why we don't make DateTime as a Dataclass**. 
+Here we will answer your questions with the help of Geniekey. 
+Every Dataclass contains a property that is decorated as key, which is the index for data management. 
+**We can directly access data in the ReactGenie database using the key.** 
+As for the Helperclass, we often access it through the Dataclass that owns it. 
+For example, when we access DateTime, we find the order from the database first, and then access the time 
+corresponding to the order, so we don't need to add key in a Helperclass.
+
+Here, we create a id for the counter as its key and decorate other properties with @GenieProperty.
+```typescript filename="Counter.ts" {4}
+import { GenieClass, DataClass, Geniekey, GenieProperty } from "reactgenie-lib";
+
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    @GenieKey
+    @GenieProperty()
+    public id:number;
+
+    @GenieProperty()
+    public name: string;
+    @GenieProperty()
+    public type: string;
+    @GenieProperty()
+    public count: number;
+}
+```
+
+### 2.3 Manage Object
+Starting now, we will begin writing functions related to the counter. We will learn how to use **@GenieFunction**
+ and preset functions provided by ReactGenie.
+
+Please notice that we need to <font color="red">use destructuring parameters for each function in GenieClass.</font>
+```typescript
+// without Destructuring
+example(a:number, b:number){}
+// with Destructuring
+example({a, b}:{a:number, b:number}){}
+```
+
+First, we need to understand how to use GenieClass's static functions to manage objects. If you know 
+object-oriented programming, you will understand that each class has its own constructor, which we use the 
+<font color="red">`new`</font> keyword when creating an instance of a class. 
+
+GenieClass also need constructor, but we will use the object funtions in ReactGenie to replace <font color="red">`new`</font> keyword.
+
+Now we can first create the constructor for Couter. Remember to provide GenieKey in it for DataClass.It means that <font color="red">the property modified by GenieKey cannot be optional.</font>
+
+```typescript filename="Counter.ts" {4}
+import { GenieClass, DataClass, Geniekey, GenieProperty } from "reactgenie-lib";
+
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    @GenieKey
+    @GenieProperty()
+    public id:number;
+
+    @GenieProperty()
+    public name: string;
+    @GenieProperty()
+    public type: string;
+    @GenieProperty()
+    public count: number;
+
+    constructor({id, name, type, count=0}:{id:number, name:string, type:string, count?:number}) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.count = count
+    }
+}
+```
+
+Before using the functions of ReactGenie, we first need to introduce @GenieFunction, which is also the last decorator of ReactGenie.
+
+
+**@GenieFunction**: If you want ReactGenie to access or call functions, use GenieFunction to decorate them. 
+GenieFunction can be called by ReactGenie automatically during multimodal interactions. 
+You can also add a description to state what this function is used for.
+
+
+
+
+<font color="red">**NOTICE:**</font>
+
+
+3. Each @GenieFunction needs an explicit return value.
+
+> In our Counter class, we implement increment() and decrement() methods.
+
+```typescript filename="Counter.ts" {11,16}
+import { GenieClass, DataClass } from "reactgenie-lib";
+import { GenieFunction } from "reactgenie-lib";
+
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    //...
+    constructor({id, type}:{id:number, type:string}){
+        //...
+    }
+
+    @GenieFunction("Increase the number")
+    increment(): void {
+        //...
+    }
+
+    @GenieFunction("Decrease the number")
+    decrement(): void {
+        //...
+    }
+}
+```
+
+#### 2.4.3 Preset Functions and Classes
+
+ReactGenie also provides some preset classes and functions. You can use these for faster development.
+
+**CreateObject(), GetObject(), DeleteObject()**
+
+ReactGenie provides the above three operations for an object, among which GetObject and DeleteObject are only applicable to 
+DataClass objects. 
+
+CreateObject() will call the constructor of the class, so **the parameters of CreateObject() is the same as constructor**. Please use CreateObject instead of `new` when initializing a new object 
+to ensure that the object is correctly serialized. 
+<font color="red">And you need to implement your own create function based on CreateObject. </font>
+
+Additionally, you can use GenieKey to get and delete the created object.
+
+> We need to add our own object-related method to Counter
+```typescript filename="Counter.ts" {9,15,20}
+import { GenieClass, DataClass } from "reactgenie-lib";
+import { GenieFunction } from "reactgenie-lib";
+
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    //...
+    @GenieFunction()
+    static CreateCounter({id, type}:{id:number, type:string}): Counter{
+        Counter.CreateObject({id:id, type:type})
+        return Counter.GetObject({id:id})
+    }
+
+    @GenieFunction()
+    static GetCounter({id}:{id:number}): Counter{
+        return Counter.GetObject({id:id})
+    }
+
+    @GenieFunction()
+    DeleteCounter(): void{
+        Counter.DeleteObject({id:this.id})
+    }
+}
+```
+
+**setup()**
+
+The setup function is a static function of the GenieClass. You can override the setup function for initial program
+ setup. ReactGenie will automatically call the function to complete the initialization. 
+ 
+> For counter, we can set up three counters in the initialization.
+```typescript filename="Counter.ts" {4}
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    //...
+    static setup() {
+        Counter.CreateCounter({id:1, type:"apple"});
+        Counter.CreateCounter({id:2, type:"orange"});
+        Counter.CreateCounter({id:3, type:"banana"});
+    }
+}
+```
+
+**All(), Current()**
+
+All() can get an array of all instances of a specific class and 
+Current() can get the currently active target based on user clicks. 
+
+<font color="red">You do not need Current() when writing state code, but you can use it when providing prompt examples.</font>
+
+Only dataclass has All() and Current().
+
+<font color="red">NOTICE: All() and Current() will be generated during execution, so you may receive a warning that 
+the function does not exist when you are writing code. You can just ignore it.</font>
+
+> For example, you can automatically update the id for a new counter
+```typescript filename="Counter.ts" {6}
+@GenieClass("A counter example")
+export class Counter extends DataClass{
+    //...
+    @GenieFunction()
+    static CreateCounter({type}:{type:string}): Counter{
+        const id = Counter.All().length + 1;
+        Counter.CreateObject({id:id, type:type})
+        return Counter.GetObject({id:id})
+    }
+    //...
+}
+```
+
+ReactGenie has two preset class <font color='red'>**DateTime**</font> and <font color='red'>**TimeDelta**</font>, they are both **HelperClass** objects. 
+You can use these to help you build the Timer or you can build your own time management. You can check the **Preset Class** section to get more information about them.
+
+Here we list some function you might need.
+```typescript filename="TimeDelta"
+//property
+    public hour: number;    // an integer representing hours
+    public minute: number;  // an integer representing minutes
+    public second: number;  // an integer representing seconds
+//functions
+
+// Returns a new instance of TimeDelta.
+// Arguments are optional, defaults are 0 if not provided. 
+// Use to create a new instance of TimeDelta
+static CreateTimeDelta({hour?: number, minute?: number, second?: number}) : TimeDelta;
+//example: TimeDelta.CreateTimeDelta({hour:0, minute:0, second:0})
+
+// Adds an offset to a TimeDelta instance.
+// All arguments are optional and are added to the properties of the instance
+addOffset({hour?: number, minute?: number, second?: number});
+//example: td.addOffset({hour:1, minute:0, second:0})
+
+// Sets time to a TimeDelta instance.
+// All arguments are optional and are seted to the properties of the instance
+setTime({hour?: number, minute?: number, second?: number});
+//example: td.setTime({hour:1, minute:0, second:0})
+
+// Returns the total amount of time left in seconds.
+getLeftSecond():number;
+//example: td.getLeftSecond()
+
+//Get the cotent of TimeDelta
+toString():string;
+//example: td.toString()
+```
+```typescript filename="DateTime"
+static today() : DateTime // Returns today's date as a DateTime object
+//example: DateTime.today()
+
+//Get the cotent of DateTime
+toString():string;
+//example: dt.toString()
+```
+
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
+### 2.5 Write UI code
+After completing the state code, we need to consider what kind of interactive UI 
+to build. We recommend considering the data content displayed when constructing the page.
+
+> For Counter, we may need an UI to display the content of a counter, and an UI to display 
+a list of counters. They correspond to an object and a list of objects.
+
+```bash
+-src
+    -CounterView.tsx
+    -CounterListView.tsx
+```
+
+To save your development time, we provide you with UI-related snippets. 
+Please refer to them for React and CSS code for the Timer app.
+
+Disclaimer: the below code snippets only consist of React/Typescript and CSS. You will need to integrate 
+ReactGenie yourself for this to be fully functional.
+
+Before we get started, here's the file heirarchy for UI code:
+```
+--src
+----commonStyles.ts
+----NewTimerForm.tsx
+----TimerItem.tsx
+----TimerView.tsx
+--App.tsx
+```
+
+<font color="red">NOTICE:</font>
+1. To achieve automatic UI generation from ReactGenie, the code is divided into two 
+parts. The first part involves the specific implementation 
+of the UI, while the second part deals with binding the UI with data types.
+
+```typescript
+import {GenieClassInterface} from "reactgenie-lib"
+//implementation
+const CounterViewImpl = (props: { name: string}) => {return /* UI code */ }
+
+//binding
+export const CounterView = GenieClassInterface((counter: Counter) => `
+${counter.name} Counter`, "Counter", 1)(CounterViewImpl)
+```
+
+2. Please use the useGenieSelector() to obtain ReactGenie data, and call genieDispatch() to modify the UI.
+
+```typescript
+import {useGenieSelector, genieDispatch} from "reactgenie-lib"
+
+const counter: Counter = useGenieSelector(() => {
+        return Counter.GetObject(props);
+    });
+
+<button onClick={() => genieDispatch(() => counter.decrement())}>-</button>
+```
+
+3. Please use **useState** cautiously and prioritize managing data with ReactGenie.
+4. Don't store data in the UI, please use state code to store data and call the data 
+in the UI. Take counter as an example, we hope that the count data is stored in the 
+Counter, and each time it is modified through access to the function.
+```typescript
+//right
+const count: number = useGenieSelector(() => {
+        return counter.count;
+    });
+
+<button onClick={() => genieDispatch(() => counter.decrement())}>-</button>
+
+//wrong
+//let count = 0;
+
+//<button onClick={() => count = count+1}>-</button>
+```
+
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
+### 2.6 Link UI to State Code
+
+After you complete the state code and UI code, you need to bind them together using **GenieClassInterface()** and 
+set up the initialization of ReactGenie. You need to annotate the data type used for display in the corresponding UI,
+ so that when ReactGenie gets the executed results, it will choose the UI to display according to the result type.
+
+The parameters for GenieClassInterface are: <font color="red">PageTitle(string), DataType(string), Priority(number, 
+large means high priority)</font>
+
+> For example, we can bind it like following:
+```typescript filename="CounterView.tsx" {9,10}
+const CounterViewImpl = (props: { name: string}) => {
+    return (
+        <div>
+        //UI code
+        </div>
+    )
+}
+
+export const CounterView = GenieClassInterface((counter: Counter) => 
+            `${counter.name} Counter`, "Counter", 1)(CounterViewImpl)
+```
+```typescript filename="CounterListView.tsx" {9}
+const CounterListViewImpl = (props: { elements: { name: string }[] }) => {
+    return (
+        <div>
+        //UI code
+        </div>
+    )
+}
+
+export const CounterListView = GenieClassInterface("Counters", "Counter[]")(CounterListViewImpl)
+```
+
+Then you need to include the main UI framework in `App.tsx`. 
+ReactGenie UI must be implemented in `ModalityProvider`.
+
+```typescript filename="App.tsx" {10} copy
+<Provider store={reactGenieStore}>//load your own store
+    <ModalityProvider
+            examples={}//example prompt
+            displayTranscript={true}
+            codexApiKey={ENV.OPENAI_API_KEY!}
+            codexApiBaseUrl={ENV.OPENAI_API_BASE_URL!}
+            azureSpeechRegion={ENV.AZURE_SPEECH_REGION!}
+            azureSpeechKey={ENV.AZURE_SPEECH_KEY!}
+            extraPrompt={''}// extra prompt
+        >
+            // Your own UI
+    </ModalityProvider>
+</Provider>
+```
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
+
+And then you need to modify `store.ts` to finish initialization. 
+
+If you overload the `setup()` function in the class, it will be automatically called in `initReactGenie()`. 
+If you want to manually complete the initialization, call your initialization function after `initReactGenie()`.
+
+```typescript filename="store.ts" copy
+export const reactGenieStore = initReactGenie();
+//manul set up here
+//Data1.manul_setup()
+//Data2.manul_setup()
+```
+You can also rename `stroe.ts` to whatever you want, but don't forget to import it in  Provider in `App.tsx`
+
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
+
+### 2.7 Add Examples and Test
+Finally, you need to add usage instances for your program to help LLM correctly generate 
+executable results. You can provide examples of relevant function usage in each class and then add it to ModalityProvider.
+
+> For counters, it may be just like this:
+```typescript filename="Counter.ts"
+export const CounterExamples = [
+{
+    user_utterance: "increment",
+    example_parsed: "Counter.Current().increment()",
+},
+{
+    user_utterance: "show me all vegetables counters",
+    example_parsed: 'Counter.All().matching(field: .type, value: "vegetable")',
+},
+{
+    user_utterance: "increase me all fruit counters",
+    example_parsed: 'Counter.All().matching(field: .type, value: "fruit").increment()',
+}]
+```
+```typescript filename="App.tsx" copy
+import { CounterExamples } from "./genie/counter";
+
+<ModalityProvider
+        examples={CounterExamples}//example prompt
+        //...
+```
+
+<font color="red">NOTICE:</font>
+1. The parameters in the cases should not be Destructuring
+```typescript
+//Right
+"Couter.CreateCounter(type:\"fruit\")" 
+//Wrong
+//"Couter.CreateCounter({type:\"fruit\"})"
+```
+
+2. ReactGenie supports some filtering operations on arrays.
+
+**matching(field, value), equal(field, value)**
+
+**between(field, from, to), sort(field, ascending)**
+Note that the field passed to sort() and between() should have a static compare() function.
+
+**contains(field, value)**
+The contains() returns the member whose field value contains the given value.
+
+All this filtering operations return a array.
+
+3. ReactGenie supports some querying operations on arrays.
+
+ReactGenie allows developers to access the properties and functions of list members during execution. 
+This can be used directly to access the properties of the list members.
+
+```typescript copy
+{
+    user_utterance: "Show me all counters type",
+    example_parsed: 'Counter.All().type',
+  },
+  {
+    user_utterance: "Delete all fruit counters",
+    example_parsed: 'Counter.All().matching(field: .type, value: "fruit").DeleteCounter()',
+  },
+```
+
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
+

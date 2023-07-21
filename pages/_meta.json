@@ -1,8 +1,7 @@
 {
     "index": "Welcome",
     "instructions": "Instructions",
-    "snippets": "Code Snippets",
-    "geniedoc": "ReactGenie docs",
+    "geniedoc": "*ReactGenie docs",
     "about": {
         "title": "About",
         "type": "page"
