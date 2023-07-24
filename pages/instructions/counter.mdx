@@ -21,6 +21,7 @@ For example, the state code for the upcoming Counter includes the Counter class 
 -src
     - //UI code
     - CounterView.tsx
+    - CounterListView.tsx
 -App.tsx
 -store.ts
 ```
@@ -352,110 +353,120 @@ to build. We recommend considering the data content displayed when constructing 
     -CounterView.tsx
 ```
 
-Like React, you need to implement the UI interface in the form of a component.
+Like React, you need to implement the UI interface in the form of a component. 
+In addition, you need to bind this component with a specific data type so that 
+when ReactGenie obtains the execution results, it will use the page you specified for display.
 
-To save your development time, we provide you with UI-related snippets. 
-Please refer to them for React and CSS code for the Timer app.
-
-Disclaimer: the below code snippets only consist of React/Typescript and CSS. You will need to integrate 
-ReactGenie yourself for this to be fully functional.
-
-Before we get started, here's the file heirarchy for UI code:
-```
---src
-----commonStyles.ts
-----NewTimerForm.tsx
-----TimerItem.tsx
-----TimerView.tsx
---App.tsx
-```
-
-<font color="red">NOTICE:</font>
-1. To achieve automatic UI generation from ReactGenie, the code is divided into two 
+So the code is divided into two 
 parts. The first part involves the specific implementation 
 of the UI, while the second part deals with binding the UI with data types.
 
-```typescript
-import {GenieClassInterface} from "reactgenie-lib"
-//implementation
-const CounterViewImpl = (props: { name: string}) => {return /* UI code */ }
-
-//binding
-export const CounterView = GenieClassInterface((counter: Counter) => `
-${counter.name} Counter`, "Counter", 1)(CounterViewImpl)
+Let's start by writing the implementation of UI. 
+We created two components separately used to display a Counter and a Counter list.
+```typescript filename="CounterView.tsx"
+const CounterViewImpl = (props: { name: string}) => {
+    
+    return (
+        <div>
+            <label>[{/*value*/}]</label> <br/> <label>{/*value*/}: </label> <br/> <label> {/*value*/}</label>
+            <button onClick={() => {/*function*/}}>+</button>
+            <button onClick={() => {/*function*/}}>-</button>
+        </div>
+    )
+}
 ```
+```typescript filename="CounterListView.tsx"
+const CounterListViewImpl = (props: { elements: { name: string }[] }) => {
+    return (
+        <div>
+            {
+                props.elements.map((element) => {
+                    return <CounterView name={element.name} key={element.name}/>
+                })
+            }
+        </div>
+    )
+}
+```
+We need to use two functions to obtain and modify the values of the ReactGenie object.
 
-2. Please use the useGenieSelector() to obtain ReactGenie data, and call genieDispatch() to modify the UI.
+useGenieSelector(): obtain ReactGenie data
 
-```typescript
-import {useGenieSelector, genieDispatch} from "reactgenie-lib"
+genieDispatch(): modify the data or call function
 
-const counter: Counter = useGenieSelector(() => {
+We can obtain ReactGenie object data based on the parameters passed in by the component, 
+and modify the data according to user operations.
+
+```typescript filename="CounterView.tsx"
+const CounterViewImpl = (props: { name: string}) => {
+    const counter: Counter = useGenieSelector(() => {
         return Counter.GetObject(props);
     });
-
-<button onClick={() => genieDispatch(() => counter.decrement())}>-</button>
-```
-
-3. Please use **useState** cautiously and prioritize managing data with ReactGenie.
-4. Don't store data in the UI, please use state code to store data and call the data 
-in the UI. Take counter as an example, we hope that the count data is stored in the 
-Counter, and each time it is modified through access to the function.
-```typescript
-//right
-const count: number = useGenieSelector(() => {
+    const counterValue = useGenieSelector(() => {
         return counter.count;
     });
-
-<button onClick={() => genieDispatch(() => counter.decrement())}>-</button>
-
-//wrong
-//let count = 0;
-
-//<button onClick={() => count = count+1}>-</button>
+    const counterType = useGenieSelector(() => {
+        return counter.type;
+    });
+    return (
+        <div>
+            <label>[{counterType}]</label> <br/> <label>{props.name}: </label> <br/> <label> {counterValue}</label>
+            <button onClick={() => genieDispatch(() => counter.increment())}>+</button>
+            <button onClick={() => genieDispatch(() => counter.decrement())}>-</button>
+        </div>
+    )
+}
 ```
 
-<table><tr><td bgcolor="#cff4fc"> 
- ========== **Run command or Write your code** =========
- </td></tr></table>
-### 2.6 Link UI to State Code
+<font color="red">Please use **useState** cautiously and prioritize managing data with ReactGenie.
+Don't store data in the UI, please use state code to store data and call the data 
+in the UI. </font>
 
-After you complete the state code and UI code, you need to bind them together using **GenieClassInterface()** and 
+### 2.7 Link UI to State Code
+
+After we complete the state code and UI code, we need to bind them together using **GenieClassInterface()** and 
 set up the initialization of ReactGenie. You need to annotate the data type used for display in the corresponding UI,
  so that when ReactGenie gets the executed results, it will choose the UI to display according to the result type.
 
 The parameters for GenieClassInterface are: <font color="red">PageTitle(string), DataType(string), Priority(number, 
 large means high priority)</font>
 
-> For example, we can bind it like following:
+We can bind the counter and counter list to the UI code
+
 ```typescript filename="CounterView.tsx" {9,10}
-const CounterViewImpl = (props: { name: string}) => {
-    return (
-        <div>
-        //UI code
-        </div>
-    )
-}
+const CounterViewImpl = (props: { name: string}) => {/*UI code*/}
 
 export const CounterView = GenieClassInterface((counter: Counter) => 
             `${counter.name} Counter`, "Counter", 1)(CounterViewImpl)
 ```
 ```typescript filename="CounterListView.tsx" {9}
-const CounterListViewImpl = (props: { elements: { name: string }[] }) => {
-    return (
-        <div>
-        //UI code
-        </div>
-    )
-}
+const CounterListViewImpl = (props: { elements: { name: string }[] }) => {/*UI code*/}
 
-export const CounterListView = GenieClassInterface("Counters", "Counter[]")(CounterListViewImpl)
+export const CounterListView = GenieClassInterface("Counters", "Counter[]",1)(CounterListViewImpl)
 ```
 
-Then you need to include the main UI framework in `App.tsx`. 
+So far, we have completed the implementation of the UI code and their binding with the corresponding data types.
+
+Then we need to modify `store.ts` to finish initialization. 
+If we overload the `setup()` function in the class, it will be automatically called in `initReactGenie()`. 
+If we want to manually complete the initialization, call our initialization function after `initReactGenie()`.
+
+```typescript filename="store.ts" copy
+export const reactGenieStore = initReactGenie();
+//manul set up here
+//Data1.manul_setup()
+//Data2.manul_setup()
+```
+You can also rename `stroe.ts` to whatever you want, but don't forget to import it in  Provider in `App.tsx`
+
+
+And then we need to include the main UI framework in `App.tsx`. 
 ReactGenie UI must be implemented in `ModalityProvider`.
 
-```typescript filename="App.tsx" {10} copy
+```typescript filename="App.tsx"  copy
+import { reactGenieStore } from "./store";
+import { ModalityProvider } from "reactgenie-lib";
+
 <Provider store={reactGenieStore}>//load your own store
     <ModalityProvider
             examples={}//example prompt
@@ -466,36 +477,63 @@ ReactGenie UI must be implemented in `ModalityProvider`.
             azureSpeechKey={ENV.AZURE_SPEECH_KEY!}
             extraPrompt={''}// extra prompt
         >
-            // Your own UI
+        <CounterListView elements={Counter.All()}> // you UI code
     </ModalityProvider>
 </Provider>
 ```
-<table><tr><td bgcolor="#cff4fc"> 
- ========== **Run command or Write your code** =========
- </td></tr></table>
 
-And then you need to modify `store.ts` to finish initialization. 
+### 2.8 Add Examples and Test
+Finally, we need to add usage instances for your program to help LLM correctly generate 
+executable results. We can provide examples of relevant function usage in each class and then add it to ModalityProvider.
 
-If you overload the `setup()` function in the class, it will be automatically called in `initReactGenie()`. 
-If you want to manually complete the initialization, call your initialization function after `initReactGenie()`.
 
-```typescript filename="store.ts" copy
-export const reactGenieStore = initReactGenie();
-//manul set up here
-//Data1.manul_setup()
-//Data2.manul_setup()
+ <font color="red">The parameters in the cases are different from the functions, they should not be Destructuring</font>
+```typescript
+//Right
+"Couter.CreateCounter(type:\"fruit\")" 
+//Wrong
+//"Couter.CreateCounter({type:\"fruit\"})"
 ```
-You can also rename `stroe.ts` to whatever you want, but don't forget to import it in  Provider in `App.tsx`
 
-<table><tr><td bgcolor="#cff4fc"> 
- ========== **Run command or Write your code** =========
- </td></tr></table>
+To help uesr achieve more interactions, ReactGenie supports some filtering operations on arrays.
 
-### 2.7 Add Examples and Test
-Finally, you need to add usage instances for your program to help LLM correctly generate 
-executable results. You can provide examples of relevant function usage in each class and then add it to ModalityProvider.
+**matching(field, value), equal(field, value)**
 
-> For counters, it may be just like this:
+**between(field, from, to), sort(field, ascending)**
+Note that the field passed to sort() and between() should have a static compare() function.
+
+**contains(field, value)**
+The contains() returns the member whose field value contains the given value.
+
+All this filtering operations return a array.
+
+For example:
+```typescript filename="Counter.ts"
+export const CounterExamples = [
+{
+    user_utterance: "show me all vegetables counters",
+    example_parsed: 'Counter.All().matching(field: .type, value: "vegetable")',
+}]
+```
+
+
+ReactGenie also supports some querying operations on arrays.
+ReactGenie allows developers to access the properties and functions of list members during execution. 
+This can be used directly to access the properties of the list members.
+
+```typescript copy
+{
+    user_utterance: "Show me all counters type",
+    example_parsed: 'Counter.All().type',
+  },
+  {
+    user_utterance: "Delete all fruit counters",
+    example_parsed: 'Counter.All().matching(field: .type, value: "fruit").DeleteCounter()',
+  },
+```
+
+
+For counter, we can add some examples for functions then import them to <font color="red">`App.tsx`</font>.
 ```typescript filename="Counter.ts"
 export const CounterExamples = [
 {
@@ -519,44 +557,8 @@ import { CounterExamples } from "./genie/counter";
         //...
 ```
 
-<font color="red">NOTICE:</font>
-1. The parameters in the cases should not be Destructuring
-```typescript
-//Right
-"Couter.CreateCounter(type:\"fruit\")" 
-//Wrong
-//"Couter.CreateCounter({type:\"fruit\"})"
-```
+We have completed a simple multimodal interactive application based on ReactGenie. Congratulations!
 
-2. ReactGenie supports some filtering operations on arrays.
 
-**matching(field, value), equal(field, value)**
 
-**between(field, from, to), sort(field, ascending)**
-Note that the field passed to sort() and between() should have a static compare() function.
-
-**contains(field, value)**
-The contains() returns the member whose field value contains the given value.
-
-All this filtering operations return a array.
-
-3. ReactGenie supports some querying operations on arrays.
-
-ReactGenie allows developers to access the properties and functions of list members during execution. 
-This can be used directly to access the properties of the list members.
-
-```typescript copy
-{
-    user_utterance: "Show me all counters type",
-    example_parsed: 'Counter.All().type',
-  },
-  {
-    user_utterance: "Delete all fruit counters",
-    example_parsed: 'Counter.All().matching(field: .type, value: "fruit").DeleteCounter()',
-  },
-```
-
-<table><tr><td bgcolor="#cff4fc"> 
- ========== **Run command or Write your code** =========
- </td></tr></table>
 
