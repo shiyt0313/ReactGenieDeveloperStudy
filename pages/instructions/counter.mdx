@@ -26,7 +26,6 @@ For example, the state code for the upcoming Counter includes the Counter class 
 -store.ts
 ```
 
-<font color="red">**TODO: add a structure picture**</font>
 
 To integrate this with React, you will need to:
     - Wrap the classes with **ReactGenie** decorators for related classes or members in **State code**
@@ -78,7 +77,6 @@ Let's provide an example to help you understand the relationship between DataCla
 
 **HelperClass acts like an assistant to DataClass in managing complex data, hence it's called a Helper.**
 
-<font color="red">**TODO: pic for DataClass and HelperClass**</font>
 
 > For the Counter app, we'll create a Counter class. Initialize the file <font color="red">`Counter.ts`</font> under the <font color="red">`genie`</font> folder:
 ```bash
@@ -117,7 +115,7 @@ export class Counter extends DataClass{
     @GenieProperty()
     public id:number;
 
-    @GenieProperty()
+    @GenieProperty("The name of the counter")
     public name: string;
     @GenieProperty()
     public type: string;
@@ -215,7 +213,7 @@ export class Counter extends DataClass{
 
     @GenieFunction()
     static CreateCounter({name, type, count=0}: {name:string, type:string, count?:number}): Counter {
-      const id = Counter.All().length;
+      const id = Counter.All().length+1;
       Counter.CreateObject({id: id, name: name, type: type, count: count})
       return Counter.GetObject({id: id});
   }
@@ -311,7 +309,7 @@ export class Counter extends DataClass{
     //Create Function
     @GenieFunction()
     static CreateCounter({name, type, count=0}: {name:string, type:string, count?:number}): Counter {
-      const id = Counter.All().length;
+      const id = Counter.All().length+1;
       Counter.CreateObject({id: id, name: name, type: type, count: count})
       return Counter.GetObject({id: id});
     }
@@ -363,8 +361,11 @@ of the UI, while the second part deals with binding the UI with data types.
 
 Let's start by writing the implementation of UI. 
 We created two components separately used to display a Counter and a Counter list.
+
+Don't forget to import <font color="red">`React`</font> in the <font color="red">`.tsx`</font> file
 ```typescript filename="CounterView.tsx"
-const CounterViewImpl = (props: { name: string}) => {
+import React from "react";
+const CounterViewImpl = (props: { id: number}) => {
     
     return (
         <div>
@@ -376,12 +377,13 @@ const CounterViewImpl = (props: { name: string}) => {
 }
 ```
 ```typescript filename="CounterListView.tsx"
-const CounterListViewImpl = (props: { elements: { name: string }[] }) => {
+import React from "react";
+const CounterListViewImpl = (props: { elements: { id: number }[] }) => {
     return (
         <div>
             {
                 props.elements.map((element) => {
-                    return <CounterView name={element.name} key={element.name}/>
+                    return <CounterView id={element.id} key={element.id}/>
                 })
             }
         </div>
@@ -398,9 +400,12 @@ We can obtain ReactGenie object data based on the parameters passed in by the co
 and modify the data according to user operations.
 
 ```typescript filename="CounterView.tsx"
-const CounterViewImpl = (props: { name: string}) => {
+const CounterViewImpl = (props: { id: number}) => {
     const counter: Counter = useGenieSelector(() => {
         return Counter.GetObject(props);
+    });
+    const counterName = useGenieSelector(() => {
+        return counter.name;
     });
     const counterValue = useGenieSelector(() => {
         return counter.count;
@@ -410,7 +415,7 @@ const CounterViewImpl = (props: { name: string}) => {
     });
     return (
         <div>
-            <label>[{counterType}]</label> <br/> <label>{props.name}: </label> <br/> <label> {counterValue}</label>
+            <label>[{counterType}]</label> <br/> <label>{counterName}: </label> <br/> <label> {counterValue}</label>
             <button onClick={() => genieDispatch(() => counter.increment())}>+</button>
             <button onClick={() => genieDispatch(() => counter.decrement())}>-</button>
         </div>
@@ -434,13 +439,13 @@ large means high priority)</font>
 We can bind the counter and counter list to the UI code
 
 ```typescript filename="CounterView.tsx" {9,10}
-const CounterViewImpl = (props: { name: string}) => {/*UI code*/}
+const CounterViewImpl = (props: { id: number}) => {/*UI code*/}
 
 export const CounterView = GenieClassInterface((counter: Counter) => 
             `${counter.name} Counter`, "Counter", 1)(CounterViewImpl)
 ```
 ```typescript filename="CounterListView.tsx" {9}
-const CounterListViewImpl = (props: { elements: { name: string }[] }) => {/*UI code*/}
+const CounterListViewImpl = (props: { elements: { id: number }[] }) => {/*UI code*/}
 
 export const CounterListView = GenieClassInterface("Counters", "Counter[]",1)(CounterListViewImpl)
 ```
@@ -467,6 +472,15 @@ ReactGenie UI must be implemented in `ModalityProvider`.
 import { reactGenieStore } from "./store";
 import { ModalityProvider } from "reactgenie-lib";
 
+const CounterList = () => {
+    const allview = useGenieSelector(() => {
+        return Counter.All();
+    });
+    return(
+        <CounterListView elements={allview} />
+    )
+}
+
 <Provider store={reactGenieStore}>//load your own store
     <ModalityProvider
             examples={}//example prompt
@@ -477,7 +491,7 @@ import { ModalityProvider } from "reactgenie-lib";
             azureSpeechKey={ENV.AZURE_SPEECH_KEY!}
             extraPrompt={''}// extra prompt
         >
-        <CounterListView elements={Counter.All()}> // you UI code
+        <CounterList/> // you UI code
     </ModalityProvider>
 </Provider>
 ```
