@@ -22,3 +22,52 @@ User might use these multimodal interactions:
 * User says "Start all timers."(with pic 1)
 
 * User says "Set the time to one and a half hours."(with pic 2)
+
+
+ReactGenie has two preset class <font color='red'>**DateTime**</font> and <font color='red'>**TimeDelta**</font>, they are both **HelperClass** objects. 
+You can use these to help you build the Timer or you can build your own time management. You can check the **Preset Class** section to get more information about them.
+
+Here we list some function you might need.
+```typescript filename="TimeDelta"
+//property
+    public hour: number;    // an integer representing hours
+    public minute: number;  // an integer representing minutes
+    public second: number;  // an integer representing seconds
+//functions
+
+// Returns a new instance of TimeDelta.
+// Arguments are optional, defaults are 0 if not provided. 
+// Use to create a new instance of TimeDelta
+static CreateTimeDelta({hour?: number, minute?: number, second?: number}) : TimeDelta;
+//example: TimeDelta.CreateTimeDelta({hour:0, minute:0, second:0})
+
+// Adds an offset to a TimeDelta instance.
+// All arguments are optional and are added to the properties of the instance
+addOffset({hour?: number, minute?: number, second?: number});
+//example: td.addOffset({hour:1, minute:0, second:0})
+
+// Sets time to a TimeDelta instance.
+// All arguments are optional and are seted to the properties of the instance
+setTime({hour?: number, minute?: number, second?: number});
+//example: td.setTime({hour:1, minute:0, second:0})
+
+// Returns the total amount of time left in seconds.
+getLeftSecond():number;
+//example: td.getLeftSecond()
+
+//Get the cotent of TimeDelta
+toString():string;
+//example: td.toString()
+```
+```typescript filename="DateTime"
+static today() : DateTime // Returns today's date as a DateTime object
+//example: DateTime.today()
+
+//Get the cotent of DateTime
+toString():string;
+//example: dt.toString()
+```
+
+<table><tr><td bgcolor="#cff4fc"> 
+ ========== **Run command or Write your code** =========
+ </td></tr></table>
