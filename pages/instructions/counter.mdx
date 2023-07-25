@@ -372,9 +372,9 @@ const CounterListViewImpl = (props: { elements: { id: number }[] }) => {
 ```
 Now, with basic UI code, we need to use two functions to obtain and modify the values of the ReactGenie object.
 
-`useGenieSelector()`: obtain ReactGenie data
+`useGenieSelector()`: wrapper function used to access ReactGenie data
 
-`genieDispatch()`: modify the data or call function
+`genieDispatch()`: wrapper function used when modifying the ReactGenie data or calling a function
 
 We can obtain ReactGenie object data based on the parameters passed in by the component, 
 and modify the data according to user operations.
@@ -446,7 +446,7 @@ If we want to manually complete the initialization, call our initialization func
 ```typescript filename="store.ts" copy
 export const reactGenieStore = initReactGenie();
 ```
-You can also rename `stroe.ts` to whatever you want, but don't forget to import it in  Provider in `App.tsx`
+You can also rename `store.ts` to whatever you want, but don't forget to import it in `App.tsx` and use it with the Provider
 
 
 And then we need to include the main UI framework in `App.tsx`. 
