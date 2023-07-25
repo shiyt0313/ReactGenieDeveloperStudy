@@ -145,7 +145,7 @@ GenieClass also need constructor, but we will use the object funtions in ReactGe
 Now we can first create the constructor for Couter. Remember to provide GenieKey in it for DataClass.It means that <font color="red">the property modified by GenieKey cannot be optional.</font>
 
 ```typescript filename="Counter.ts" {4}
-import { GenieClass, DataClass, Geniekey, GenieProperty } from "reactgenie-lib";
+import { GenieClass, DataClass, GenieKey, GenieProperty } from "reactgenie-lib";
 
 @GenieClass("A counter example")
 export class Counter extends DataClass{
@@ -161,6 +161,7 @@ export class Counter extends DataClass{
     public count: number;
 
     constructor({id, name, type, count=0}:{id:number, name:string, type:string, count?:number}) {
+        super({})
         this.id = id;
         this.name = name;
         this.type = type;
@@ -198,13 +199,14 @@ multimodal interactions and we can also automatically generate GenieKey in our o
 So we can add a CreateCounter() to Counter:
 
 ```typescript filename="Counter.ts" {4}
-import { GenieClass, DataClass, Geniekey, GenieProperty, GenieFunction } from "reactgenie-lib";
+import { GenieClass, DataClass, GenieKey, GenieProperty, GenieFunction } from "reactgenie-lib";
 
 @GenieClass("A counter example")
 export class Counter extends DataClass{
     //...
 
     constructor({id, name, type, count=0}:{id:number, name:string, type:string, count?:number}) {
+        super({})
         this.id = id;
         this.name = name;
         this.type = type;
@@ -283,7 +285,7 @@ Here we get a example state code for Counter:
 <details>
 <summary>Counter.ts</summary>
 ```typescript
-import { GenieClass, DataClass, Geniekey, GenieProperty, GenieFunction } from "reactgenie-lib";
+import { GenieClass, DataClass, GenieKey, GenieProperty, GenieFunction } from "reactgenie-lib";
 
 @GenieClass("A counter example")
 export class Counter extends DataClass{
@@ -300,6 +302,7 @@ export class Counter extends DataClass{
     public count: number;
 
     constructor({id, name, type, count=0}:{id:number, name:string, type:string, count?:number}) {
+        super({})
         this.id = id;
         this.name = name;
         this.type = type;
@@ -400,6 +403,9 @@ We can obtain ReactGenie object data based on the parameters passed in by the co
 and modify the data according to user operations.
 
 ```typescript filename="CounterView.tsx"
+import React from "react";
+import { useGenieSelector, genieDispatch } from 'reactgenie-lib'
+
 const CounterViewImpl = (props: { id: number}) => {
     const counter: Counter = useGenieSelector(() => {
         return Counter.GetObject(props);
@@ -439,12 +445,16 @@ large means high priority)</font>
 We can bind the counter and counter list to the UI code
 
 ```typescript filename="CounterView.tsx" {9,10}
+import { GenieClassInterface } from 'reactgenie-lib'
+
 const CounterViewImpl = (props: { id: number}) => {/*UI code*/}
 
 export const CounterView = GenieClassInterface((counter: Counter) => 
             `${counter.name} Counter`, "Counter", 1)(CounterViewImpl)
 ```
 ```typescript filename="CounterListView.tsx" {9}
+import { GenieClassInterface } from 'reactgenie-lib'
+
 const CounterListViewImpl = (props: { elements: { id: number }[] }) => {/*UI code*/}
 
 export const CounterListView = GenieClassInterface("Counters", "Counter[]",1)(CounterListViewImpl)
@@ -471,6 +481,7 @@ ReactGenie UI must be implemented in `ModalityProvider`.
 ```typescript filename="App.tsx"  copy
 import { reactGenieStore } from "./store";
 import { ModalityProvider } from "reactgenie-lib";
+import { useGenieSelector } from 'reactgenie-lib'
 
 const CounterList = () => {
     const allview = useGenieSelector(() => {
