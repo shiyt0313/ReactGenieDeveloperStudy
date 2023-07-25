@@ -1,13 +1,14 @@
 ## 3. Task: Timer
 We provide you with a boilerplate for Timer, please build a Timer based on it.
-The boilerplate for Timer contains some snippets to save your time. 
+The boilerplate for Timer contains some snippets to save your time. We have also added TODO comments 
+in the boilerplate to help guide you to the missing functionalities that are needed.
+
 ### 3.1 Requirements
-Build a simple timer app that supports basic operations such as starting and pausing the timer. 
-Refer to the UI screenshots below. Additionally, use ReactGenie to integrate voice commands to 
+Integrate ReactGenie with a simple timer app as provided in the boilerplate repo to integrate voice commands to 
 allow multimodality for users. 
 
-Users may use a variety of possible interactions, consider the interactions that the user may 
-make to build the entire application, we have given five possible user interaction inputs.
+Users may use a variety of possible voice interactions. Think about the different interactions that a user 
+might use when interacting with the app. We have given five possible user interaction inputs as an example.
 
 This is the UI of a Timer. 
 <img style={{display:"inline-block"}} src="/TimerMain.png" width="45%"/>
@@ -24,9 +25,20 @@ User might use these multimodal interactions:
 
 * User says "Set the time to one and a half hours."(with pic 2)
 
-### 3.2 Preset Class
-ReactGenie has two preset class <font color='red'>**DateTime**</font> and <font color='red'>**TimeDelta**</font>, they are both **HelperClass** objects. 
-You can use these to help you build the Timer or you can build your own time management. You can check the **Preset Class** section to get more information about them.
+### 3.2 Setup
+Download the TimerAppBoilerplate
+
+```jscopy
+git clone git@github.com:StanfordHCI/TimerAppBoilerplate.git
+```
+
+Install dependencies using `npm install`.
+You can run the app using `npx expo start --web`.
+
+### 3.3 Preset Class
+ReactGenie has two preset class <font color='red'>**DateTime**</font> and <font color='red'>**TimeDelta**</font>, 
+they are both **HelperClass** objects. You can either use these to help you build the Timer or build 
+your own time management system. Check out the **Preset Class** section to get more information about them.
 
 Here we list some function you might need.
 ```typescript filename="TimeDelta"
@@ -68,3 +80,22 @@ static today() : DateTime // Returns today's date as a DateTime object
 toString():string;
 //example: dt.toString()
 ```
+
+### 3.4 Overview of TimerAppBoilerplate 
+
+We've broken the boilerplate code into 3 parts.
+
+1. **State Code**: This is used to control and manage the app, such as managing data and executing functions. 
+It is written in the <font color="red">`genie`</font> folder. We've set up a file `genie/Timer.ts` for you. Please implement 
+your Timer app state code there.
+
+2. **UI Code**: This is used to display information and interact with the user. It is written in the 
+<font color="red">`src`</font> folder. We've already provided all of the UI code for you, but you will need to integrate 
+the store data values and methods into the components.
+
+3. **Combine**: This involves linking the State and UI code in <font color="red">`App.tsx`</font> and <font color="red">`store.ts`</font>.
+
+### 3.5 Good luck!
+
+Use the provided comments in the TimerAppBoilerplate, the tutorial with Counter example, and ReactGenie docs to 
+complete the timer app with React Genie.
