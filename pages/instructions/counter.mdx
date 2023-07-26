@@ -73,13 +73,13 @@ export class Counter extends DataClass{
 }
 ```
 
-Note that, a state class in ReactGenie has to extend `DataClass` and be annotated with `@GenieClass("{description of the class}")` to help ReactGenie better understand the role of the class.
+Note that, a state class in ReactGenie has to extend <font color="red">`DataClass`</font> and be annotated with <font color="red">`@GenieClass("{description of the class}")`</font> to help ReactGenie better understand the role of the class.
 In the counter, we create three class properties type, name, and count.
 
-Another thing to keep in mind is that ReactGenie will handle the creation, management, update, and storage of all state classes (`DataClass`es), so we only support primitive types (e.g., `string`, `int`, `float`, `boolean`), arrays of primitive types, compound types (e.g., `DateTime` and `TimeDelta`), and arrays of compound types.
+Another thing to keep in mind is that ReactGenie will handle the creation, management, update, and storage of all state classes (<font color="red">`DataClass`</font>es), so we only support primitive types (e.g., <font color="red">`string`</font>, <font color="red">`int`</font>, <font color="red">`float`</font>, <font color="red">`boolean`</font>), arrays of primitive types, compound types (e.g., <font color="red">`DateTime`</font> and <font color="red">`TimeDelta`</font>), and arrays of compound types.
 
 There may be many properties in a class, and we only want to expose some of them to ReactGenie for user to interact with them multimodally.
-In ReactGenie, this is done through annotating the properties with `@GenieProperty("{description of the property}")`.
+In ReactGenie, this is done through annotating the properties with <font color="red">`@GenieProperty("{description of the property}")`</font>.
 
 ```typescript filename="Counter.ts" {4}
 import { GenieClass, DataClass, GenieProperty, int } from "reactgenie-lib";
@@ -95,9 +95,9 @@ export class Counter extends DataClass{
 }
 ```
 
-Another thing is required for a `DataClass` is that it has to have a key for ReactGenie to manage the data.
+Another thing is required for a <font color="red">`DataClass`</font> is that it has to have a key for ReactGenie to manage the data.
 The key is like key column in a database, it has to be unique for each instance of the class.
-In ReactGenie, this is done through annotating the key with `@GenieKey`.
+In ReactGenie, this is done through annotating the key with <font color="red">`@GenieKey`</font>.
 
 ```typescript filename="Counter.ts" {4}
 import { GenieClass, DataClass, GenieKey, GenieProperty, int } from "reactgenie-lib";
@@ -116,32 +116,32 @@ export class Counter extends DataClass{
 }
 ```
 
-To recap, a state class (`DataClass`) in ReactGenie have to have the following three things:
-* `@GenieClass("{description of the class}")` and extends `DataClass`
-* `@GenieProperty("{description of the property}")`: properties that you want to expose to ReactGenie
-* `@GenieKey`: a unique key for each instance of the class
+To recap, a state class (<font color="red">`DataClass`</font>) in ReactGenie have to have the following three things:
+* <font color="red">`@GenieClass("{description of the class}")`</font> and extends <font color="red">`DataClass`</font>
+* <font color="red">`@GenieProperty("{description of the property}")`</font>: properties that you want to expose to ReactGenie
+* <font color="red">`@GenieKey`</font>: a unique key for each instance of the class
 
 ### 2.4 State class management
 
-Similar to TypeScript, ReactGenie `DataClass`es need a constructor.
+Similar to TypeScript, ReactGenie <font color="red">`DataClass`</font>es need a constructor.
 
 ```typescript filename="Counter.ts" {4}
-import { GenieClass, DataClass, GenieKey, GenieProperty } from "reactgenie-lib";
+import { GenieClass, DataClass, GenieKey, GenieProperty, int } from "reactgenie-lib";
 
 @GenieClass("A counter example")
 export class Counter extends DataClass{
     @GenieKey
     @GenieProperty()
-    public id:number;
+    public id:int;
 
     @GenieProperty()
     public name: string;
     @GenieProperty()
     public type: string;
     @GenieProperty()
-    public count: number;
+    public count: int;
 
-    constructor({id, name, type, count = 0}: {id: number, name: string, type: string, count?: number}) {
+    constructor({id, name, type, count = 0}: {id: int, name: string, type: string, count?: int}) {
         super({})
         this.id = id;
         this.name = name;
@@ -150,17 +150,16 @@ export class Counter extends DataClass{
     }
 }
 ```
-* TODO: Change the above *
 
-Note that for `DataClass`, all function parameters have to be destructured, this allows you to have parameters that are optional.
+Note that for <font color="red">`DataClass`</font>, all function parameters have to be destructured, this allows you to have parameters that are optional.
 
 ```typescript
 // without Destructuring
-function example(a: number, b: number){}
+function example(a: int, b: int){}
 // with Destructuring
-function example({a, b}: {a: number, b: number}){}
+function example({a, b}: {a: int, b: int}){}
 // with Destructuring and default value
-function example({a, b = 0}: {a: number, b?: number}){}
+function example({a, b = 0}: {a: int, b?: int}){}
 ```
 
 Note that even with the constructor implemented, you should avoid directly calling the constructor like:
@@ -171,10 +170,10 @@ Objects created like this will not be automatically tracked by ReactGenie.
 Instead, ReactGenie provides the three static functions below to help you manage the object,
 **CreateObject(), GetObject(), DeleteObject(), All()**.
 
-`CreateObject()` will call the constructor of the class, so **the parameters of CreateObject() is the same as constructor**.
-`GetObject()` allows you to access a object through its `GenieKey`.
-`All()` allows you to get an array of all instances of a specific class.
-`DeleteObject()` allows you to delete a object through its `GenieKey`.
+<font color="red">`CreateObject()`</font> will call the constructor of the class, so **the parameters of CreateObject() is the same as constructor**.
+<font color="red">`GetObject()`</font> allows you to access a object through its <font color="red">`GenieKey`</font>.
+<font color="red">`All()`</font> allows you to get an array of all instances of a specific class.
+<font color="red">`DeleteObject()`</font> allows you to delete a object through its <font color="red">`GenieKey`</font>.
 
 For example:
 ```typescript filename="Counter.ts" {4}
@@ -190,13 +189,13 @@ If you want to allow user to create a counter while using the app, you need to c
 
 For example, if we want to allow users to say "Create a apple counter", we need to create a function like:
 ```typescript filename="Counter.ts" {4}
-import { GenieClass, DataClass, GenieKey, GenieProperty, GenieFunction } from "reactgenie-lib";
+import { GenieClass, DataClass, GenieKey, GenieProperty, GenieFunction, int } from "reactgenie-lib";
 
 @GenieClass("A counter example")
 export class Counter extends DataClass{
     //...
 
-    constructor({id, name, type, count=0}:{id:number, name:string, type:string, count?:number}) {
+    constructor({id, name, type, count=0}:{id:int, name:string, type:string, count?:int}) {
         super({})
         this.id = id;
         this.name = name;
@@ -205,13 +204,12 @@ export class Counter extends DataClass{
     }
 
     @GenieFunction()
-    static CreateCounter({name, type, count=0}: {name:string, type:string, count?:number}): Counter {
+    static CreateCounter({name, type, count=0}: {name:string, type:string, count?:int}): Counter {
       const id = Counter.All().length+1;
       return Counter.CreateObject({id: id, name: name, type: type, count: count})
-  }
+    }
 }
 ```
-*TODO: Change the above*
 
 
 ### 2.5 Setup placeholder values
@@ -234,14 +232,14 @@ export class Counter extends DataClass{
 ### 2.6 Add you own functions
 Next, you can create more functionalities for your class.
 we can creat delete, increase, and decrease functions.
-```typescript filename="Counter.ts" {4}
+```typescript filename="Counter.ts" 
 @GenieClass("A counter example")
 export class Counter extends DataClass{
     //...
     
     @GenieFunction()
     delete(): void {
-        Counter.DeleteObject({id:this.id});
+        Counter.DeleteObject({id: this.id});
     }
 
     @GenieFunction()
@@ -255,31 +253,33 @@ export class Counter extends DataClass{
     }
 }
 ```
-*TODO: update this*
-Note that similar to `GenieProperty`, `GenieFunction` is used to expose functions to ReactGenie that users can increment and decrement the counter via multimodal interactions.
+
+Note that similar to <font color="red">`GenieProperty`</font>, <font color="red">`GenieFunction`</font> is used to expose functions to ReactGenie that users can increment and decrement the counter via multimodal interactions.
+
+The parameters of <font color="red">`GenieFunction`</font> should also be destructured and the return value should be explicit, but it can be explicit <font color="red">`void`</font>.
 
 Of course, you can also create functions to set names, types, etc., to support more possible features.
 Here we get a example state code for Counter:
 <details>
 <summary>Counter.ts</summary>
 ```typescript
-import { GenieClass, DataClass, GenieKey, GenieProperty, GenieFunction } from "reactgenie-lib";
+import { GenieClass, DataClass, GenieKey, GenieProperty, GenieFunction, int } from "reactgenie-lib";
 
 @GenieClass("A counter example")
 export class Counter extends DataClass{
     //DataClass need a Key
     @GenieKey
     @GenieProperty()
-    public id:number;
+    public id: int;
 
     @GenieProperty()
     public name: string;
     @GenieProperty()
     public type: string;
     @GenieProperty()
-    public count: number;
+    public count: int;
 
-    constructor({id, name, type, count=0}:{id:number, name:string, type:string, count?:number}) {
+    constructor({id, name, type, count=0}:{id: int, name: string, type: string, count?: int}) {
         super({})
         this.id = id;
         this.name = name;
@@ -289,7 +289,7 @@ export class Counter extends DataClass{
 
     //Create Function
     @GenieFunction()
-    static CreateCounter({name, type, count=0}: {name:string, type:string, count?:number}): Counter {
+    static CreateCounter({name, type, count=0}: {name: string, type: string, count?: int}): Counter {
       const id = Counter.All().length+1;
       Counter.CreateObject({id: id, name: name, type: type, count: count})
       return Counter.GetObject({id: id});
@@ -297,9 +297,9 @@ export class Counter extends DataClass{
 
     //Initialization
     static setup() {
-        Counter.CreateCounter({name:"apple", type:"fruit"});
-        Counter.CreateCounter({name:"orange", type:"fruit"});
-        Counter.CreateCounter({name:"potato", type:"vegetable"});
+        Counter.CreateCounter({name: "apple", type: "fruit"});
+        Counter.CreateCounter({name: "orange", type: "fruit"});
+        Counter.CreateCounter({name: "potato", type: "vegetable"});
     }
 
     //Your own functions
@@ -320,7 +320,6 @@ export class Counter extends DataClass{
 }
 ```
 </details>
-*TODO: update this*
 
 ### 2.6 Write UI code
 
@@ -331,6 +330,7 @@ We recommend considering what data classes need to be represented when construct
 ```bash
 -src
     -CounterView.tsx
+    -CounterListView.tsx
 ```
 
 Like React, you need to implement the UI interface in the form of a component. 
@@ -358,6 +358,8 @@ const CounterViewImpl = (props: { id: number}) => {
 ```
 ```typescript filename="CounterListView.tsx"
 import React from "react";
+import { CounterView } from "./CounterView";
+
 const CounterListViewImpl = (props: { elements: { id: number }[] }) => {
     return (
         <div>
@@ -372,15 +374,16 @@ const CounterListViewImpl = (props: { elements: { id: number }[] }) => {
 ```
 Now, with basic UI code, we need to use two functions to obtain and modify the values of the ReactGenie object.
 
-`useGenieSelector()`: wrapper function used to access ReactGenie data
+<font color="red">`useGenieSelector()`</font>: wrapper function used to access ReactGenie data
 
-`genieDispatch()`: wrapper function used when modifying the ReactGenie data or calling a function
+<font color="red">`genieDispatch()`</font>: wrapper function used when modifying the ReactGenie data or calling a function
 
 We can obtain ReactGenie object data based on the parameters passed in by the component, 
 and modify the data according to user operations.
 
 ```typescript filename="CounterView.tsx"
 import React from "react";
+import { Counter } from "../genie/Counter";
 import { useGenieSelector, genieDispatch } from 'reactgenie-lib'
 
 const CounterViewImpl = (props: { id: number}) => {
@@ -439,23 +442,27 @@ export const CounterListView = GenieClassInterface("Counters", "Counter[]",1)(Co
 
 So far, we have completed the implementation of the UI code and their binding with the corresponding data types.
 
-Then we need to modify `store.ts` to finish initialization. 
-If we overload the `setup()` function in the class, it will be automatically called in `initReactGenie()`. 
-If we want to manually complete the initialization, call our initialization function after `initReactGenie()`.
+Then we need to modify <font color="red">`store.ts`</font> to finish initialization. 
+If we overload the <font color="red">`setup()`</font> function in the class, it will be automatically called in <font color="red">`initReactGenie()`</font>. 
+If we want to manually complete the initialization, call our initialization function after <font color="red">`initReactGenie()`</font>.
 
 ```typescript filename="store.ts" copy
 export const reactGenieStore = initReactGenie();
 ```
-You can also rename `store.ts` to whatever you want, but don't forget to import it in `App.tsx` and use it with the Provider
+You can also rename <font color="red">`store.ts`</font> to whatever you want, but don't forget to import it in <font color="red">`App.tsx`</font> and use it with the Provider
 
 
-And then we need to include the main UI framework in `App.tsx`. 
-ReactGenie UI must be implemented in `ModalityProvider`.
+And then we need to include the main UI framework in <font color="red">`App.tsx`</font>. 
+ReactGenie UI must be implemented in <font color="red">`ModalityProvider`</font>.
 
 ```typescript filename="App.tsx"  copy
+import React from "react";
 import { reactGenieStore } from "./store";
-import { ModalityProvider } from "reactgenie-lib";
-import { useGenieSelector } from 'reactgenie-lib'
+import { ModalityProvider, useGenieSelector } from "reactgenie-lib";
+import { Counter } from "./genie/Counter";
+import { Provider } from "react-redux";
+import ENV from "./config";
+import { CounterListView } from "./src/CounterListView";
 
 const CounterList = () => {
     const allview = useGenieSelector(() => {
@@ -465,20 +472,23 @@ const CounterList = () => {
         <CounterListView elements={allview} />
     )
 }
-
-<Provider store={reactGenieStore}>//load your own store
-    <ModalityProvider
-            examples={}//example prompt
-            displayTranscript={true}
-            codexApiKey={ENV.OPENAI_API_KEY!}
-            codexApiBaseUrl={ENV.OPENAI_API_BASE_URL!}
-            azureSpeechRegion={ENV.AZURE_SPEECH_REGION!}
-            azureSpeechKey={ENV.AZURE_SPEECH_KEY!}
-            extraPrompt={''}// extra prompt
-        >
-        <CounterList/> // you UI code
-    </ModalityProvider>
-</Provider>
+const App = () => {
+    return(
+        <Provider store={reactGenieStore}>//load your own store
+            <ModalityProvider
+                    examples={}//example prompt
+                    displayTranscript={true}
+                    codexApiKey={ENV.OPENAI_API_KEY!}
+                    codexApiBaseUrl={ENV.OPENAI_API_BASE_URL!}
+                    azureSpeechRegion={ENV.AZURE_SPEECH_REGION!}
+                    azureSpeechKey={ENV.AZURE_SPEECH_KEY!}
+                    extraPrompt={''}// extra prompt
+                >
+                <CounterList/> // you UI code
+            </ModalityProvider>
+        </Provider>
+    )}
+    export default App;
 ```
 
 ### 2.8 Add Examples and Test
@@ -550,7 +560,7 @@ export const CounterExamples = [
 }]
 ```
 ```typescript filename="App.tsx" copy
-import { CounterExamples } from "./genie/counter";
+import { CounterExamples } from "./genie/Counter";
 
 <ModalityProvider
         examples={CounterExamples}//example prompt
