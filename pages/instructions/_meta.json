@@ -2,5 +2,6 @@
     "demographics": "1. Demographics Survey",
     "counter": "2. Tutorial: Counter app",
     "timer": "3. Your turn: Timer app",
-    "questionnaire": "4. Questionnaire"
+    "survey": "4. Study Survey",
+    "questionnaire": "5. Questionnaire"
 }
