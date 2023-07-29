@@ -25,19 +25,16 @@ User might use these multimodal interactions:
 * User says "Set the time to one and a half hours."(with pic 2)
 
 ### 3.2 Setup
-Download the TimerAppBoilerplate
+We have prepared you with a starter project called <font color="red">`RG-study-timer`</font> in the UserStudy folder on the desktop.
 
-```jscopy
-git clone git@github.com:StanfordHCI/TimerAppBoilerplate.git
-```
+We will construct a new Timer using this starter project.
 
 Install dependencies using `npm install`.
 You can run the app using `npx expo start --web`.
 
 ### 3.3 Preset Class
-ReactGenie has two preset class <font color='red'>**DateTime**</font> and <font color='red'>**TimeDelta**</font>, 
-they are both **HelperClass** objects. You can either use these to help you build the Timer or build 
-your own time management system. Check out the **Preset Class** section to get more information about them.
+ReactGenie has preset structure <font color='red'>**DateTime**</font>. You can use it to help you build the Timer. 
+Check out the **Preset Class** section to get more information about them.
 
 Here we list some function you might need.
 ```typescript filename="TimeDelta"
@@ -57,6 +54,7 @@ static CreateTimeDelta({hour?: number, minute?: number, second?: number}) : Time
 // All arguments are optional and are added to the properties of the instance
 addOffset({hour?: number, minute?: number, second?: number});
 //example: td.addOffset({hour:1, minute:0, second:0})
+//example: td.addOffset({hour:0, minute:0, second:-1})
 
 // Sets time to a TimeDelta instance.
 // All arguments are optional and are seted to the properties of the instance
@@ -70,14 +68,6 @@ getLeftSecond():number;
 //Get the cotent of TimeDelta
 toString():string;
 //example: td.toString()
-```
-```typescript filename="DateTime"
-static today() : DateTime // Returns today's date as a DateTime object
-//example: DateTime.today()
-
-//Get the cotent of DateTime
-toString():string;
-//example: dt.toString()
 ```
 
 ### 3.4 Overview of TimerAppBoilerplate 
