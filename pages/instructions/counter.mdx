@@ -157,7 +157,7 @@ To recap, a state class (<font color="red">`DataClass`</font>) in ReactGenie req
 
 ### 2.4 State class management
 
-Similar to TypeScript, ReactGenie <font color="red">`DataClass`</font>es need a constructor.
+Now that we've defined our properties, we need to initialize these properties using a constructor. This is required for the properties.
 
 ```typescript filename="Counter.ts" {17}
 import { GenieClass, DataClass, GenieKey, GenieProperty, int } from "reactgenie-lib";
@@ -187,8 +187,22 @@ export class Counter extends DataClass{
 }
 ```
 
-Note that for <font color="red">`DataClass`</font>, all function parameters have to be destructured, this allows you to have parameters that are optional.
+In the constructor, we need to destructure the function properties and declare types for each. In typescript, we often create a 
+separate interface for readability as such: 
+```typescript
+interface CounterProps {
+    id: string,
+    name: string, 
+    type: string, 
+    count?: int, 
+    created:boolean
+}
 
+constructor({id, name, type, count = 0, created}: CounterProps) {...}
+```
+
+This is the same concept, just implemented inline instead. The `?` is used to declare optional properties for the class. 
+Destructuring allows us to utitlize optional properties:
 ```typescript
 // without Destructuring
 function example(a: int, b: int){}
@@ -198,7 +212,8 @@ function example({a, b}: {a: int, b: int}){}
 function example({a, b = 0}: {a: int, b?: int}){}
 ```
 
-Note that even with the constructor implemented, you should avoid directly calling the constructor like:
+**NOTE**
+You should AVOID directly calling the constructor like below:
 ```typescript
 const counter = new Counter({id: "1", name: "apple", type: "fruit", count: 0, created: true})
 ```
@@ -211,7 +226,7 @@ Instead, ReactGenie provides the three static functions below to help you manage
 <font color="red">`All()`</font> allows you to get an array of all instances of a specific class.
 <font color="red">`DeleteObject()`</font> allows you to delete a object through its <font color="red">`GenieKey`</font>.
 
-For example:
+Please use these for relevant functionalities so ReactGenie is able to track it.For example:
 ```typescript filename="Counter.ts"
 const appleCounter = Counter.CreateObject({id: "1", name: "apple", type: "fruit", count: 0, created:true})
 const getAppleCounter = Counter.GetObject({id: "1"}) // getAppleCounter === appleCounter
@@ -223,23 +238,14 @@ const allCountersAfterDelete = Counter.All() // allCountersAfterDelete === []
 <font color="red">Note that only `All()` is automatically exposed to multimodal interactions.</font>
 If you want to allow user to create a counter while using the app, you need to create a function for it.
 
-For example, if we want to allow users to say "Create a apple counter", we need to create a function like:
+For example, if we want to allow users to say "Create an apple counter", we need to create a function like:
 ```typescript filename="Counter.ts" {18}
 import { GenieClass, DataClass, GenieKey, GenieProperty, GenieFunction, int } from "reactgenie-lib";
 
 @GenieClass("A counter example")
 export class Counter extends DataClass{
     //...
-
-    constructor({id, name, type, count = 0, created}: 
-            {id: string, name: string, type: string, count?: int, created:boolean}) {
-        super({})
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.count = count
-        this.created = created;
-    }
+    //...
 
     @GenieFunction()
     static CreateCounter({name, type, count=0, created}: 
