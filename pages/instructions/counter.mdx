@@ -1,25 +1,23 @@
 ## 2. Tutorial: Counter
-Welcome to the Counter app tutorial. 
-This page will introduce you to all the ReactGenie concepts you'll need for this study 
-and guide you in building a simple Counter with ReactGenie.
+This tutorial will demonstrate how to use ReactGenie to build a simple Counter app.
 
 ### 2.1 ReactGenie Overview
 We'll start with a brief introduction to the ReactGenie framework to help you understand how to build applications.
 
-Each app built with ReactGenie, as a multimodal application, consists of three parts:
+Each multimodal app built with ReactGenie consists of three parts:
 
-1. **State Code**: This is used to control and manage the app, 
-such as managing data and executing functions. 
+1. **State Code**: This is used to control and manage the state, such as data and executing functions. 
 It is written in the <font color="red">`genie`</font> folder.
 
-2. **UI Code**: This is used to display information and interact with the user. 
+2. **UI Code**: This is used to display information and enable user interactions with React and CSS. 
 It is written in the <font color="red">`src`</font> folder.
 
-3. **Combine**: This involves linking the State and UI code 
+3. **Combine**: This involves linking the State and UI code by integrating state executing functions with UI user interactions, 
+as well as accessing state data via stored variables.
 in <font color="red">`App.tsx`</font> and <font color="red">`store.ts`</font>.
 
-For example, the state code for the upcoming Counter includes Counter class for count management,
-while the UI code for displaying a specific counter of a counter list interface,.
+For example, the state code for the upcoming Counter includes Counter class for counter state management,
+while the UI code for displaying the counter input form and countdown interface for added counters.
 
  ```bash {3,6,7,8,9}
 - genie
@@ -35,16 +33,17 @@ while the UI code for displaying a specific counter of a counter list interface,
 -store.ts
 ```
 
-We'll provide more detailed instructions in the later sections, 
-and you can also refer to the ReactGenie documentation for additional guidance.
+We'll provide more detailed instructions in the later sections. 
+You can also refer to the ReactGenie documentation for additional guidance.
 
 In the following section, we'll demonstrate how to implement a simple Counter App with ReactGenie.
-We'll follow the same path: starting from state code to UI code, and finally linking them together.
+We'll follow the path as defined about: we'll start by defining our state management class, then 
+implement our UI, and finally, integrate our state data and actions into the UI.
 
 ### 2.2 Environment Check
-We have prepared you with a starter project called <font color="red">`RG-study-counter`</font> in the UserStudy folder on the desktop.
+On your desktop, you'll find a UserStudy folder. Inside, we have prepared a starter project for you called <font color="red">`RG-study-counter`</font>
 
-We will construct a new Counter using this starter project.
+The tutorial below will guide how to construct a new Counter using this starter project.
 To run the starter ReactGenie project, you can use the following commands:
 
 ```bash copy
@@ -58,13 +57,26 @@ You should see the following content in the openend browser:
 Welcome to ReactGenie Developer Study !
 ```
 
-Note that the ReactGenie framework provides a microphone button on the bottom right of the webpage.
-This button allows user to talk to the app in addition to using the typical graphical user interface.
+Note that the ReactGenie framework provides a microphone button on the bottom right of the webpage. Users can click this button 
+to utilize the React Genie voice interface when they would like to. Users can also continue to use the graphical user interface (GUI) as 
+they please.
 
 ### 2.3 Create state classes
 
-First, we need to determine which classes we need to implement for a Counter app.
-For the Counter app, we'll create a Counter class. 
+ReactGenie provides you with two inbuilt classes that you can extend from for your state classes.
+1. **DataClass**: A DataClass is the basic unit for data management, and an instance of a DataClass can be viewed as a record in a database. 
+The property in a DataClass can be a number, string, boolean, list, DataClass, or a HelperClass. Read more in the docs.
+2. **HelperClass**: The HelperClass stores and manages complex data types for a DataClass. These are serialized and deserialized. Read more in the docs.
+
+When implementing React Genie state, you will need to create a class using DataClass. You'll only need a helper class, if you need complex data storage.
+
+ReactGenie will then handle the creation, management, update, and storage of all state classes (<font color="red">`DataClass`</font>es). It can only 
+support primitive types (e.g., <font color="red">`string`</font>, <font color="red">`int`</font>, <font color="red">`float`</font>, 
+<font color="red">`boolean`</font>), arrays of primitive types, compound types (e.g., <font color="red">`DateTime`</font> 
+and <font color="red">`TimeDelta`</font>), and arrays of compound types.
+
+Let's get started with implementing a Counter class to store and manage our Counters!
+
 Initialize the file <font color="red">`Counter.ts`</font> under the <font color="red">`genie`</font> folder:
 ```bash
 -genie
@@ -83,22 +95,19 @@ export class Counter extends DataClass{
 }
 ```
 
-Note that, a state class in ReactGenie has to extend <font color="red">`DataClass`</font> and 
+Please review our documentation for decorators. All classes, functions, and properties need to be wrapped with ReactGenie decorators 
+if they need to be accessed by ReactGenie. They need to include a description that explains its purpose, so ReactGenie is able to access it 
+for relevant voice commands/actions.
+
+_A state class in ReactGenie has to extend <font color="red">`DataClass`</font> and 
 be annotated with <font color="red">`@GenieClass("{description of the class}")`</font> to 
-help ReactGenie better understand the role of the class.
-We create four class properties type, name, count, and created.
+ReactGenie better understand the role of the class._
 
-Another thing to keep in mind is that ReactGenie will handle the creation, 
-management, update, and storage of all state classes (<font color="red">`DataClass`</font>es), 
-so we only support primitive types 
-(e.g., <font color="red">`string`</font>, <font color="red">`int`</font>, <font color="red">`float`</font>, 
-<font color="red">`boolean`</font>), arrays of primitive types, 
-compound types (e.g., <font color="red">`DateTime`</font> and <font color="red">`TimeDelta`</font>), 
-and arrays of compound types.
+We'll need four class properties type, name, count, and created for our counter.
 
-There may be many properties in a class, and we only want to expose some of them to 
-ReactGenie for user to interact with them multimodally.
-In ReactGenie, this is done through annotating the properties with <font color="red">`@GenieProperty("{description of the property}")`</font>.
+There may be many properties in a class, and we only want to expose some of them to ReactGenie for user to interact 
+with them multimodally. For the properties you want to expose to ReactGenie for multimodal interactions, wrap them with 
+ <font color="red">`@GenieProperty("{description of the property}")`</font> decorator.
 
 ```typescript filename="Counter.ts" {5,7,9,11}
 import { GenieClass, DataClass, GenieProperty, int } from "reactgenie-lib";
@@ -116,10 +125,10 @@ export class Counter extends DataClass{
 }
 ```
 
-Another thing is required for a <font color="red">`DataClass`</font> is that it 
-has to have a key for ReactGenie to manage the data.
-The key is like key column in a database, it has to be unique for each instance of the class.
-In ReactGenie, this is done through annotating the key with <font color="red">`@GenieKey`</font>.
+This class is still missing one important piece. Each <font color="red">`DataClass`</font> requires a key to 
+help ReactGenie manage the classes. The key has to be unique for each instance of the class.
+In ReactGenie, this is done through wrapping the key property with <font color="red">`@GenieKey`</font> decorator.
+Let's add this to our class:
 
 
 ```typescript filename="Counter.ts" {5,6}
@@ -141,8 +150,8 @@ export class Counter extends DataClass{
 }
 ```
 
-To recap, a state class (<font color="red">`DataClass`</font>) in ReactGenie have to have the following three things:
-* <font color="red">`@GenieClass("{description of the class}")`</font> and extends <font color="red">`DataClass`</font>
+To recap, a state class (<font color="red">`DataClass`</font>) in ReactGenie requires the following decorators:
+* <font color="red">`@GenieClass("{description of the class}")`</font> that extends <font color="red">`DataClass`</font>
 * <font color="red">`@GenieProperty("{description of the property}")`</font>: properties that you want to expose to ReactGenie
 * <font color="red">`@GenieKey`</font>: a unique key for each instance of the class
 
