@@ -33,8 +33,8 @@ Install dependencies using `npm install`.
 You can run the app using `npx expo start --web`.
 
 ### 3.3 Preset Class
-ReactGenie has preset structure <font color='red'>**DateTime**</font>. You can use it to help you build the Timer. 
-Check out the **Preset Class** section to get more information about them.
+ReactGenie has provided preset HelperClass <font color='red'>**DateTime**</font> and <font color='red'>**TimeDelta**</font>. You can use them to help you build the Timer.
+Check out the [**Preset Class**](https://react-genie-developer-study.vercel.app/geniedoc/preset) section to get more information about them.
 
 Here we list some function you might need.
 ```typescript filename="TimeDelta"
@@ -78,11 +78,11 @@ We've broken the boilerplate code into 3 parts.
 It is written in the <font color="red">`genie`</font> folder. We've set up a file `genie/Timer.ts` for you. Please implement 
 your Timer app state code there.
 
-2. **UI Code**: This is used to display information and interact with the user. It is written in the 
+2. **Link UI Code to State**: This is used to display the state data and allow users to interact with the data via the UI. It is written in the
 <font color="red">`src`</font> folder. We've already provided all of the UI code for you, but you will need to integrate 
-the store data values and methods into the components.
+the state data values and methods to interact with the states into the components.
 
-3. **Combine**: This involves linking the State and UI code in <font color="red">`App.tsx`</font> and <font color="red">`store.ts`</font>.
+3. **Link State Code to UI**: This involves linking the State to UI so ReactGenie knows using which UI to render which type of results. You will need to modify <font color="red">`App.tsx`</font> and <font color="red">`store.ts`</font>.
 
 ### 3.5 Good luck!
 
