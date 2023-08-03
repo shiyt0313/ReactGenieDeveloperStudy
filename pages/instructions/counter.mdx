@@ -1,23 +1,30 @@
 ## 2. Tutorial: Counter
-This tutorial will demonstrate how to use ReactGenie to build a simple Counter app.
+This tutorial will demonstrate how to use ReactGenie to build a simple Counter app. You don't need to write code in this part, just follow the
+instructions to understand how to use ReactGenie to build a multimodal app.
 
 ### 2.1 ReactGenie Overview
 We'll start with a brief introduction to the ReactGenie framework to help you understand how to build multimodal applications using ReactGenie.
+
+ReactGenie is a framework help developers to build a multimodal app.
+<font color="#8b0000">ReactGenie will automatically parse users' natural language queries to function calls based on LLM, execute the command and then display
+ the result.</font> As developers, you only need to give some descriptions and examples to help ReactGenie handle user's query.
 
 Each multimodal app built with ReactGenie consists of three parts:
 
 1. **State Code**: This is used to control and manage the state, such as data and executing functions. 
 It is written in the <font color="red">`genie`</font> folder.
 
-2. **Link UI Code to State**: This is used to display the state data and allow users to interact with the data via the UI.
+2. **UI Code**: This is used to display the state data and allow users to interact with the data via the UI.
 It is written in the <font color="red">`src`</font> folder.
 
-3. **Link State Code to UI**: This involves linking the State to UI so ReactGenie knows using which UI to render which type of results. You will need to modify <font color="red">`App.tsx`</font> and <font color="red">`store.ts`</font>.
+3. **Link UI to State code**: This involves linking the State to UI so ReactGenie knows using which UI to render which type of results.
+You will need to modify <font color="red">`App.tsx`</font> and <font color="red">`store.ts`</font>.
 
-For example, in the upcoming Counter app tutorial, the state code includes the Counter class (`Counter.ts`) for counter state management,
-and the UI code includes views of the counter input form and the interface for added counters (e.g., `EditCounterView.tsx`).
+For example, in the upcoming Counter app tutorial, the state code includes the Counter class (<font color="red">`Counter.ts`</font>) for counter state management,
+and the UI code includes views of the counter input form and the interface for added counters (e.g., <font color="red">`EditCounterView.tsx`</font>).
+The structure of the Counter app is as follows:
 
- ```bash {3,6,7,8,9}
+ ```bash {2,5}
 - genie
     - //state code
     - Counter.ts
@@ -39,7 +46,7 @@ We'll follow the path as defined about: we'll start by defining our state manage
 implement our UI, and finally, integrate our state data and actions into the UI.
 
 ### 2.2 Environment Check
-On your desktop, you'll find a UserStudy folder. Inside, we have prepared a starter project for you called <font color="red">`RG-study-counter`</font>
+Open WebStorm, we have prepared a starter project for you called <font color="red">`Counter`</font>
 
 The tutorial below will guide how to construct a new Counter using this starter project.
 To run the starter ReactGenie project, you can use the following commands:
@@ -68,7 +75,8 @@ ReactGenie provides you with two inbuilt classes that you can extend from for yo
 The property in a DataClass can be a number, string, boolean, list, DataClass, or a HelperClass. Read more in the [docs](https://react-genie-developer-study.vercel.app/geniedoc/decorators#dataclass).
 2. **HelperClass**: The HelperClass stores and manages complex data types. They will be used to define complex properties in a Dataclass, so that they can be serialized and deserialized. Read more in the [docs](https://react-genie-developer-study.vercel.app/geniedoc/decorators#helperclass).
 
-Note: **You don't need to create any HelperClass today.** However, you will need to use predefined HelperClass (i.e., <font color="red">`TimeDelta`</font>) for creating complex properties in your DataClass.
+Note: **You don't need to create any HelperClass today.** However,
+you will need to use predefined HelperClass (i.e., <font color="red">`TimeDelta`</font>) while building Timer for creating complex properties in your DataClass.
 
 Let's get started with implementing a Counter Dataclass to store and manage our Counters!
 
@@ -79,7 +87,7 @@ Initialize the file <font color="red">`Counter.ts`</font> under the <font color=
 ```
 
 To create a DataClass, you need to define all the properties of the DataClass in primitive types (e.g., <font color="red">`string`</font>, <font color="red">`int`</font>,
-                                                                                                  <font color="red">`boolean`</font>), arrays of primitive types, compound types using HelperClass, or arrays of compount types.
+<font color="red">`boolean`</font>), arrays of primitive types, compound types using HelperClass, or arrays of compount types.
 
 ```typescript filename="Counter.ts" {4, 5, 6, 7}
 import { GenieClass, DataClass, int } from "reactgenie-lib";
@@ -92,10 +100,12 @@ export class Counter extends DataClass{
 }
 ```
 
-Now we're introducing a key concept in ReactGenie, the ReactGenie decorators.
+Now we're introducing a key concept in ReactGenie, the **ReactGenie decorators**.
 ReactGenie can transform users' natural language queries to function calls.
 To achieve this, you need to add a ReactGenie decorator for the classes, functions, and properties that you want the users to be able to access with multimodal interactions (voice + touch).
-In the decorator, you can optionally specify a string to describe the purpose of the class, function, or property.
+In the decorator, <font color="red">you can **optionally** specify a string to describe the purpose of the class, function, or property.</font>
+The description you provided in the decorator will be passed to LLM to help ReactGenie understand it.
+
 
 ```typescript filename="Counter.ts" {3, 5, 7, 9, 11}
 import { GenieClass, DataClass, GenieProperty, int } from "reactgenie-lib";
@@ -191,7 +201,7 @@ Instead, ReactGenie provides the three static functions below to help you manage
 <font color="red">`DeleteObject()`</font> allows you to delete a object through its <font color="red">`GenieKey`</font>.
 
 Please use these functions to create and access the objects so that ReactGenie can track the objects. For example:
-```typescript filename="Counter.ts"
+```typescript
 const appleCounter = Counter.CreateObject({id: "1", name: "apple", type: "fruit", count: 0, created:true})
 const getAppleCounter = Counter.GetObject({id: "1"}) // getAppleCounter === appleCounter
 const allCounters = Counter.All() // allCounters === [appleCounter]
@@ -214,7 +224,7 @@ export class Counter extends DataClass{
     @GenieFunction()
     static CreateCounter({name, type, count=0, created}: 
             {name:string, type:string, count?:int, created:boolean}): Counter {
-        const id = Counter.All().length.toString();
+        const id = Counter.All().length.toString(); // automatically generate a unique id
         return Counter.CreateObject({id: id, name: name, type: type, count: count, created: created})
     }
 }
@@ -224,9 +234,9 @@ export class Counter extends DataClass{
 #### 2.3.3 Setup placeholder objects
 ReactGenie provides you with class initialization settings, where you can set static variables for the class or create placeholder objects.
 The setup() function is a static function of the GenieClass. You can override the setup function for initial program
- setup. ReactGenie will automatically call the function to complete the initialization. 
+ setup and can also make it empty. ReactGenie will automatically call the function to complete the initialization.
 
-> For counter, we can set up three counters in the initialization.
+For counter, we can set up three counters in the initialization.
 ```typescript filename="Counter.ts" {4, 5, 6, 7, 8}
 @GenieClass("A counter example")
 export class Counter extends DataClass{
@@ -325,9 +335,9 @@ export class Counter extends DataClass{
 ```
 </details>
 
-### 2.4 Link UI Code to State
+### 2.4 Design UI Code
 
-#### 2.4.1 Write UI code and bind state with it
+#### 2.4.1 Write UI code
 Now we need to determine what to display in a Counter app and what kind of graphical UI to construct.
 The Counter app will comprise two pages, one dedicated to editing a specific Counter and the other designed to display the list of Counters.
 
@@ -344,22 +354,35 @@ The Counter app will comprise two pages, one dedicated to editing a specific Cou
     - MainView.tsx
 ```
 
-Like React, you need to implement the UI interface in the form of a component. 
+Like React, you need to implement the UI interface in the form of a component.
+```typescript
+export default function MyApp() {
+
+  return (
+    <div>
+      <h1>Welcome to my app</h1>
+      <MyButton />
+    </div>
+  );
+}
+```
 In addition, you need to bind this component with a specific data type so that when ReactGenie obtains the execution results, it will use the page you specified for display.
 
 So the code is divided into two parts.
-The first part involves the specific implementation of the UI, and the second part deals with binding the UI with data types.
+<font color="red">The first part involves the specific implementation of the UI, and the second part deals with binding the UI with data types.</font>
 
-To bind the state data with the UI, we need to use <font color="red">`useGenieSelector()`</font> to obtain ReactGenie object.
-We can obtain the ReactGenie object data based on the parameters passed in by the component (e.g., `props: {id:string}`) and modify the data according to user operations.
+To get the state data with the UI, we need to use <font color="red">`useGenieSelector()`</font> to obtain ReactGenie object.
+We can obtain the ReactGenie object data based on the parameters passed in by the component (e.g., <font color="red">`props: {id:string}`</font>) and modify the data according to user operations.
 
-Below are files that demonstrate both the the implementation of UI and examples of binding the UI with data types using `useGenieSelector`.
+Below are files that demonstrate the implementation of UI and get data using `useGenieSelector`.
 Don't forget to import <font color="red">`React`</font> in the <font color="red">`.tsx`</font> file.
 
 The edit page is used to modify the counter or create a new counter.
+<img style={{display:"inline-block"}} src="/Create.png" width="45%"/>
+<img style={{display:"inline-block"}} src="/Edit.png" width="45%"/>
 <details>
 <summary>EditCounterView.tsx</summary>
-```typescript filename="EditCounterView.tsx" {6,7,8,25}
+```typescript filename="EditCounterView.tsx" {6,7,8,15,18,21,25}
 import React from "react";
 import {useGenieSelector} from "reactgenie-lib";
 import {Counter} from "../genie/Counter";
@@ -384,7 +407,7 @@ const EditCounterViewImpl = (props:{id:string}) => {//pass the id to EditCounter
                        onChange={(e) => counter.count = parseInt(e.target.value)}></input>
             </div>
                 {
-                    !counter.created? //show different UI for creating and editing
+                    !counter.created? //show different UI button for creating and editing
                         <div>
                             <button onClick={() => {
                                 counter.created = true;
@@ -416,6 +439,7 @@ export const EditCounterView = EditCounterViewImpl; //TODO: need to be linked
 </details>
 
 Counter item shows the information of the counter.
+<img style={{display:"inline-block"}} src="/Item.png" width="35%"/>
 
 <details>
 <summary>CounterItemView.tsx</summary>
@@ -473,6 +497,7 @@ export const CounterListView = CounterListViewImpl;//TODO: need to be linked
 
 
 Finally, we need to create a MainView page.
+<img style={{display:"inline-block"}} src="/MainView.png" width="50%"/>
 <details>
 <summary>MainView.tsx</summary>
 ```typescript filename="MainView.tsx" {9,17}
@@ -512,7 +537,35 @@ in the UI. </font>
 #### 2.4.2 Page Management with AppNavigator
 We need to include the main UI framework in <font color="red">`App.tsx`</font>. 
 ReactGenie UI must be implemented in <font color="red">`ModalityProvider`</font>.
+    ```typescript filename="App.tsx" {12,21}
+    import React from "react";
+    import {Provider} from "react-redux";
+    import ENV from "./config";
+    import {reactGenieStore} from "./store";
+    import {ModalityProvider} from "reactgenie-lib";
 
+
+const App = () => {
+
+return (
+    <Provider store={reactGenieStore}>
+        <ModalityProvider
+            displayTranscript={true}
+            codexApiKey={ENV.OPENAI_API_KEY!}
+            codexApiBaseUrl={ENV.OPENAI_API_BASE_URL!}
+            azureSpeechRegion={ENV.AZURE_SPEECH_REGION!}
+            azureSpeechKey={ENV.AZURE_SPEECH_KEY!}
+            extraPrompt={'// we are using voice recognition. so there may be errors. Try to think about words with similar sounds. For example "address" can actually be "add this".'}
+        >
+            //UI framework
+        </ModalityProvider>
+    </Provider>
+);
+};
+
+export default App;
+```
+You can see there are many TODOs in the code, they are the places for managing pages switch.
 Here we will use <font color="red">`AppNavigator`</font> to handle the switch between pages.
 <font color="red">`AppNavigator`</font> is just like a stack for pages, you can display the new page with <font color="red">`push()`</font>
  and back to the previous page with <font color="red">`pop()`</font>. 
@@ -678,11 +731,11 @@ After we complete the UI code and state code, we need to bind them together with
 set up the initialization of ReactGenie. 
 
 We need to annotate the data type used for display in the corresponding UI,
- so that when ReactGenie gets the executed results, it will choose the proper UI based on the result type to display the results.
+ <font color="red">so that when ReactGenie gets the executed results, it will choose the proper UI based on the result type to display the results.</font>
 
 The parameters for GenieClassInterface are: <font color="red">DataType</font>(string), <font color="red">displayTitle</font> (string | function return string), 
  <font color="red">Priority</font>(number | function return string, large means high priority).
- Priority is optional.
+ Priority is optional. You can bind different UIs to the same data type and ReactGenie will choose the UI with the highest priority to display the results.
 
 We can bind the counter and counter list to the UI code
 
@@ -709,7 +762,7 @@ export const CounterItemView = GenieClassInterface(
     (counter: Counter) => counter.created ? 1 : -1
     )(CounterItemViewImpl)
 ```
-```typescript filename="CounterListView.tsx" {9}
+```typescript filename="CounterListView.tsx" {5}
 import { GenieClassInterface } from 'reactgenie-lib'
 
 const CounterListViewImpl = (props: { elements: { id: string }[] }) => {/*UI code*/}
@@ -731,8 +784,18 @@ export const reactGenieStore = initReactGenie();
 Finally, we need to add usage instances for your program to help ReactGenie correctly generate
 executable results using LLM. We need to provide examples of relevant function usage in each class.
 
-Below is an example of a static list in GenieClass. <font color="red">
-You only need to give out the name of the parameters in the cases, and do not wrap them with the curly brackets. </font>
+Examples is a static list in GenieClass.
+```typescript filename="Counter.ts"
+export class Counter extends GenieClass {
+    //...
+    static Examples = [
+        // examples here.
+    ]
+}
+```
+
+
+<font color="red">You only need to give out the name of the parameters in the cases, and do not wrap them with the curly brackets. </font>
 ```typescript
 //Right
 "Counter.CreateCounter(type:\"fruit\", name:\"apple\")"
@@ -753,12 +816,11 @@ The contains() returns the member whose field value contains the given value.
 All this filtering operations return a array.
 
 For example:
-```typescript filename="Counter.ts"
-static Examples = [
+```typescript
 {
     user_utterance: "show me all vegetables counters",
     example_parsed: 'Counter.All().matching(field: .type, value: "vegetable")',
-}]
+}
 ```
 
 ReactGenie also supports some querying operations on arrays.

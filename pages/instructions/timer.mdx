@@ -3,9 +3,15 @@ We provide you with a boilerplate for Timer, please build a Timer based on it.
 The boilerplate for Timer contains some snippets to save your time. We have also added TODO comments 
 in the boilerplate to help guide you to the missing functionalities that are needed.
 
+We expect you to do the task using ReactGenie mostly by yourself,
+and we will give you guidance on the other part of the task that are not unique for ReactGenie,
+such as the control logic and UI implementation.
+We also provide guidance about what functionality of the app should be supported,
+so you can focus on implementing these functionalities rather than design it from scratch yourself.
+
 ### 3.1 Task Description
 Integrate ReactGenie with a simple timer app as provided in the boilerplate repo to integrate voice commands to 
-allow multimodality for users. 
+allow multimodality for users.
 
 Users may use a variety of possible voice interactions. Think about the different interactions that a user 
 might use when interacting with the app. We have given five possible user interaction inputs as an example.
@@ -25,18 +31,45 @@ User might use these multimodal interactions:
 * User says "Set the time to one and a half hours."(with pic 2)
 
 ### 3.2 Setup
-We have prepared you with a starter project called <font color="red">`RG-study-timer`</font> in the UserStudy folder on the desktop.
+We have prepared you with a starter project called <font color="red">`Timer`</font> in the UserStudy folder on the desktop.
 
 We will construct a new Timer using this starter project.
 
 Install dependencies using <font color='red'>`npm install`</font>.
 You can run the app using <font color='red'>`npx expo start --web`</font>.
 
-### 3.3 Preset Class
-ReactGenie has provided preset HelperClass <font color='red'>**TimeDelta**</font>. You can use it to help you build the Timer.
-Check out the [**Preset Class**](https://react-genie-developer-study.vercel.app/geniedoc/preset) section to get more information about them.
+### 3.3 Overview of TimerAppBoilerplate
 
-Here we list some function you might need.
+We've broken the boilerplate code into 3 parts.
+
+1. **State Code**: This is used to control and manage the app, such as managing data and executing functions.
+It is written in the <font color="red">`genie`</font> folder. We've set up a file <font color="red">`genie/Timer.ts`</font> for you. Please implement
+your Timer app state code there.
+
+2. **UI Code**: This is used to display the state data and allow users to interact with the data via the UI. It is written in the
+<font color="red">`src`</font> folder. We've already provided all of the UI code for you, but you will need to integrate
+the state data values and methods to interact with the states into the components.
+
+3. **Link State Code to UI**: This involves linking the State to UI so ReactGenie knows using which UI to render which type of results. You will need to modify <font color="red">`App.tsx`</font> and <font color="red">`store.ts`</font>.
+
+
+### 3.4 Preset Class
+ReactGenie has provided preset HelperClass <font color='red'>**TimeDelta**</font>. You can use it to help you build the Timer.
+
+You can create a property of TimeDelta in Timer to help you handle the time.
+```typescript
+import {TimeDelta} from "reactgenie-lib";
+
+class Timer{
+    //create a TimeDelta instance
+    public td : TimeDelta;
+
+
+}
+```
+
+
+Here we list some function and the usage examples you might need.
 ```typescript filename="TimeDelta"
 //property
     public hour: number;    // an integer representing hours
@@ -74,20 +107,6 @@ toString():string;
 //example: 
 td.toString()
 ```
-
-### 3.4 Overview of TimerAppBoilerplate 
-
-We've broken the boilerplate code into 3 parts.
-
-1. **State Code**: This is used to control and manage the app, such as managing data and executing functions. 
-It is written in the <font color="red">`genie`</font> folder. We've set up a file <font color="red">`genie/Timer.ts`</font> for you. Please implement 
-your Timer app state code there.
-
-2. **Link UI Code to State**: This is used to display the state data and allow users to interact with the data via the UI. It is written in the
-<font color="red">`src`</font> folder. We've already provided all of the UI code for you, but you will need to integrate 
-the state data values and methods to interact with the states into the components.
-
-3. **Link State Code to UI**: This involves linking the State to UI so ReactGenie knows using which UI to render which type of results. You will need to modify <font color="red">`App.tsx`</font> and <font color="red">`store.ts`</font>.
 
 ### 3.5 Good luck!
 
