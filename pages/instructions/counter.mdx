@@ -369,33 +369,37 @@ export default function MyApp() {
 In addition, you need to bind this component with a specific data type so that when ReactGenie obtains the execution results, it will use the page you specified for display.
 
 So the code is divided into two parts.
-<font color="red">The first part involves the specific implementation of the UI, and the second part deals with binding the UI with data types.</font>
+<font color="red">The first part involves the specific implementation of the UI, 
+and the second part deals with binding the UI with data types.</font>
+
+We need to decide what to display on the interface and design the UI elements, it includes the label, input box, button, etc.
+For example, we can display the name, type, and count of the counter, and add buttons to increment, decrement. 
 
 To get the state data with the UI, we need to use <font color="red">`useGenieSelector()`</font> to obtain ReactGenie object.
 We can obtain the ReactGenie object data based on the parameters passed in by the component (e.g., <font color="red">`props: {id:string}`</font>) and modify the data according to user operations.
 
-Below are files that demonstrate the implementation of UI and get data using `useGenieSelector`.
+Below are files that demonstrate the implementation of UI and get data using <font color="red">`useGenieSelector`</font>.
 Don't forget to import <font color="red">`React`</font> in the <font color="red">`.tsx`</font> file.
 
-The edit page is used to modify the counter or create a new counter.
+The edit page is used to modify the counter or create a new counter. The button on this page should dynimically change according to the creation state of the counter.
 <img style={{display:"inline-block"}} src="/Create.png" width="45%"/>
 <img style={{display:"inline-block"}} src="/Edit.png" width="45%"/>
 <details>
 <summary>EditCounterView.tsx</summary>
-```typescript filename="EditCounterView.tsx" {6,7,8,15,18,21,25}
+```typescript filename="EditCounterView.tsx" {7,8,15,18,21,25,27,31,38,41}
 import React from "react";
 import {useGenieSelector} from "reactgenie-lib";
 import {Counter} from "../genie/Counter";
 
 //implementation
-const EditCounterViewImpl = (props:{id:string}) => {//pass the id to EditCounterView
+const EditCounterViewImpl = (props:{id?:string}) => {//pass the id to EditCounterView
     const counter =  useGenieSelector(() => {//get counter by id
         return Counter.GetObject(props);
     });
 
     return (
         <div>
-            <div >
+            <div > // display all the information of the counter
                 <label>Title </label>
                 <input type='text' size={20} value={counter.name}
                        onChange={(e) => counter.name = e.target.value}></input>
@@ -438,12 +442,12 @@ export const EditCounterView = EditCounterViewImpl; //TODO: need to be linked
 ```
 </details>
 
-Counter item shows the information of the counter.
+Counter item shows the brief information of the counter. And Count list contains several counter items.
 <img style={{display:"inline-block"}} src="/Item.png" width="35%"/>
 
 <details>
 <summary>CounterItemView.tsx</summary>
-```typescript filename="CounterItemView.tsx" {7,8,13,16,17,18}
+```typescript filename="CounterItemView.tsx" {7,8,14,17,18}
 import React from "react";
 import {Pressable} from "react-native";
 import {useGenieSelector} from "reactgenie-lib";
@@ -496,7 +500,7 @@ export const CounterListView = CounterListViewImpl;//TODO: need to be linked
 </details>
 
 
-Finally, we need to create a MainView page.
+Finally, we need to create a MainView page. MainView page contains a button to create a new counter and a list of counters.
 <img style={{display:"inline-block"}} src="/MainView.png" width="50%"/>
 <details>
 <summary>MainView.tsx</summary>
@@ -534,7 +538,6 @@ Don't store data in the UI, please use state code to store data and call the dat
 in the UI. </font>
 
 
-#### 2.4.2 Page Management with AppNavigator
 We need to include the main UI framework in <font color="red">`App.tsx`</font>. 
 ReactGenie UI must be implemented in <font color="red">`ModalityProvider`</font>.
     ```typescript filename="App.tsx" {12,21}
@@ -565,12 +568,15 @@ return (
 
 export default App;
 ```
+
+#### 2.4.2 Page Management with AppNavigator
 You can see there are many TODOs in the code, they are the places for managing pages switch.
 Here we will use <font color="red">`AppNavigator`</font> to handle the switch between pages.
 <font color="red">`AppNavigator`</font> is just like a stack for pages, you can display the new page with <font color="red">`push()`</font>
  and back to the previous page with <font color="red">`pop()`</font>. 
 
-We can register two pages in <font color="red">`App.tsx`</font> with <font color="red">`AppNavigator`</font>
+We can define two pages for MainView page and EditCounter page, 
+then register two pages with <font color="red">`AppNavigator`</font> in <font color="red">`App.tsx`</font> with <font color="red">`AppNavigator`</font>
 <details>
 <summary>App.tsx</summary>
 ```typescript filename="App.tsx" {16,23,31,35,36,51}
@@ -635,7 +641,7 @@ export default App;
 </details>
 
 Then we can use <font color="red">`push()`</font> and <font color="red">`pop()`</font> for update pages. 
-For example:
+For example, we can click the button in MainView to create a new counter and jump to EditCounter page.
 ```typescript filename="MainView.tsx" {19}
 import {AppNavigator} from "../App";
 import {useGenieSelector} from "reactgenie-lib";
@@ -664,6 +670,9 @@ export const MainView = () => {
     )
 }
 ```
+
+Click on the CounterItem to jump to the EditCounter page to edit it.
+
 ```typescript filename="CounterItemView.tsx" {9}
 import React from "react";
 import {Pressable} from "react-native";
@@ -682,6 +691,9 @@ const CounterItemViewImpl = (props: {id:string}) => { //pass the id to CounterIt
 
 export const CounterItemView = CounterItemViewImpl//TODO: need to be linked
 ```
+
+After editing, we can click the button to save the counter and jump back to the MainView page.
+
 ```typescript filename="EditCounterView.tsx" {15,19,25,29}
 import React from "react";
 import {useGenieSelector} from "reactgenie-lib";
@@ -689,7 +701,7 @@ import {Counter} from "../genie/Counter";
 import {AppNavigator} from "../App";
 
 //implementation
-const EditCounterViewImpl = (props:{id:string}) => {//pass the id to EditCounterView
+const EditCounterViewImpl = (props:{id?:string}) => {//pass the id to EditCounterView
     //...
             </div>
             {
@@ -722,7 +734,7 @@ const EditCounterViewImpl = (props:{id:string}) => {//pass the id to EditCounter
 export const EditCounterView = EditCounterViewImpl; //TODO: need to be linked
 
 ```
-Now we can run `npx expo start --web` to test the UI and 
+Now we can run <font color ="red">`npx expo start --web`</font> to test the UI and 
 click the button to check whether we can get a new page. 
 
 ### 2.5 Link State Code to UI
@@ -742,7 +754,7 @@ We can bind the counter and counter list to the UI code
 ```typescript filename="EditCounterView.tsx" {5}
 import { GenieClassInterface } from 'reactgenie-lib'
 
-const EditCounterViewImpl = (props: { id: string}) => {/*UI code*/}
+const EditCounterViewImpl = (props: { id?: string}) => {/*UI code*/}
 
 export const EditCounterView = GenieClassInterface(
     "Counter", 
@@ -789,8 +801,22 @@ Examples is a static list in GenieClass.
 export class Counter extends GenieClass {
     //...
     static Examples = [
-        // examples here.
-    ]
+    {
+        user_utterance: "Increse this counter",
+        example_parsed: "Counter.Current().increment()",
+    },
+    {
+        user_utterance: "show me all vegetables counters",
+        example_parsed: 'Counter.All().matching(field: .type, value: "vegetable")',
+    },
+    {
+        user_utterance: "increase me all fruit counters",
+        example_parsed: 'Counter.All().matching(field: .type, value: "fruit").increment()',
+    },
+    {
+        user_utterance: "Delete this counter",
+        example_parsed: 'Counter.Current().delete()',
+    }]
 }
 ```
 
@@ -820,6 +846,10 @@ For example:
 {
     user_utterance: "show me all vegetables counters",
     example_parsed: 'Counter.All().matching(field: .type, value: "vegetable")',
+},
+{
+    user_utterance: "show me all counters less than five",
+    example_parsed: 'Counter.All().between(field: .count, from: 0, to: 5)',
 }
 ```
 
@@ -838,7 +868,7 @@ This can be used directly to access the properties of the list members.
   },
 ```
 Another function is built by ReactGenie to provide rich multimodal interactions is **Current()**.
-Current() is automatically created for all `DataClass`es, and it returns the current object that is being interacted with.
+Current() is automatically created for all <font color="red">`DataClass`</font>es, and it returns the current object that is being interacted with.
 
 Make sure the examples cover these features:
 1. Current()
@@ -870,28 +900,8 @@ Make sure the examples cover these features:
     example_parsed: 'Counter.Current().delete()',
 }
 ```
-Please avoid testing one function with two similar utterance examples.
+<font color="red">Please avoid testing one function with two similar utterance examples.</font>
 
-For counter, we can add some examples for functions.
-```typescript filename="Counter.ts"
-static Examples = [
-{
-    user_utterance: "Increse this counter",
-    example_parsed: "Counter.Current().increment()",
-},
-{
-    user_utterance: "show me all vegetables counters",
-    example_parsed: 'Counter.All().matching(field: .type, value: "vegetable")',
-},
-{
-    user_utterance: "increase me all fruit counters",
-    example_parsed: 'Counter.All().matching(field: .type, value: "fruit").increment()',
-},
-{
-    user_utterance: "Delete this counter",
-    example_parsed: 'Counter.Current().delete()',
-}]
-```
 
 We have completed a simple multimodal interactive application based on ReactGenie. Congratulations!
 

@@ -62,7 +62,7 @@ import {TimeDelta} from "reactgenie-lib";
 
 class Timer{
     //create a TimeDelta instance
-    public td : TimeDelta;
+    public delta : TimeDelta;
 
 
 }
@@ -88,24 +88,24 @@ TimeDelta.CreateTimeDelta({hour:0, minute:0, second:0})
 // All arguments are optional and are added to the properties of the instance
 addOffset({hour?: number, minute?: number, second?: number});
 //example: 
-td.addOffset({hour:1, minute:0, second:0})
-td.addOffset({hour:0, minute:0, second:-1})
+delta.addOffset({hour:1, minute:0, second:0})
+delta.addOffset({hour:0, minute:0, second:-1})
 
 // Sets time to a TimeDelta instance.
 // All arguments are optional and are seted to the properties of the instance
 setTime({hour?: number, minute?: number, second?: number});
 //example: 
-td.setTime({hour:1, minute:0, second:0})
+delta.setTime({hour:1, minute:0, second:0})
 
 // Returns the total amount of time left in seconds.
 getLeftSecond():number;
 //example: 
-td.getLeftSecond()
+delta.getLeftSecond()
 
 //Get the cotent of TimeDelta
 toString():string;
 //example: 
-td.toString()
+delta.toString()
 ```
 
 ### 3.5 Good luck!
