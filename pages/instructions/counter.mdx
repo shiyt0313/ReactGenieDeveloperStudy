@@ -399,7 +399,8 @@ const EditCounterViewImpl = (props:{id?:string}) => {//pass the id to EditCounte
 
     return (
         <div>
-            <div > // display all the information of the counter
+            <div > 
+                {/*display all the information of the counter*/} 
                 <label>Title </label>
                 <input type='text' size={20} value={counter.name}
                        onChange={(e) => counter.name = e.target.value}></input>
@@ -411,7 +412,8 @@ const EditCounterViewImpl = (props:{id?:string}) => {//pass the id to EditCounte
                        onChange={(e) => counter.count = parseInt(e.target.value)}></input>
             </div>
                 {
-                    !counter.created? //show different UI button for creating and editing
+                    {/*show different UI button for creating and editing*/} 
+                    !counter.created? 
                         <div>
                             <button onClick={() => {
                                 counter.created = true;
@@ -560,7 +562,7 @@ return (
             azureSpeechKey={ENV.AZURE_SPEECH_KEY!}
             extraPrompt={'// we are using voice recognition. so there may be errors. Try to think about words with similar sounds. For example "address" can actually be "add this".'}
         >
-            //UI framework
+            {/*UI framework*/}
         </ModalityProvider>
     </Provider>
 );
@@ -705,7 +707,8 @@ const EditCounterViewImpl = (props:{id?:string}) => {//pass the id to EditCounte
     //...
             </div>
             {
-                !counter.created? //show different UI for creating and editing
+                {/*show different UI for creating and editing*/}
+                !counter.created? 
                     <div>
                         <button onClick={() => {
                             counter.created = true;
