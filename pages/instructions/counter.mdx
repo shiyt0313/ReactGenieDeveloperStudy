@@ -1,8 +1,8 @@
-## 2. Tutorial: Counter
+## 1. Tutorial: Counter
 This tutorial will demonstrate how to use ReactGenie to build a simple Counter app. You don't need to write code in this part, just follow the
 instructions to understand how to use ReactGenie to build a multimodal app.
 
-### 2.1 ReactGenie Overview
+### 1.1 ReactGenie Overview
 We'll start with a brief introduction to the ReactGenie framework to help you understand how to build multimodal applications using ReactGenie.
 
 ReactGenie is a framework help developers to build a multimodal app.
@@ -45,7 +45,7 @@ In the following section, we'll demonstrate how to implement a simple Counter Ap
 We'll follow the path as defined about: we'll start by defining our state management class, then 
 implement our UI, and finally, integrate our state data and actions into the UI.
 
-### 2.2 Environment Check
+### 1.2 Environment Check
 Open WebStorm, we have prepared a starter project for you called <font color="red">`Counter`</font>
 
 The tutorial below will guide how to construct a new Counter using this starter project.
@@ -66,9 +66,9 @@ Note that the ReactGenie framework provides a microphone button on the bottom ri
 to utilize the React Genie voice interface when they would like to. Users can also continue to use the graphical user interface (GUI) as 
 they please.
 
-### 2.3 State Code
+### 1.3 State Code
 
-#### 2.3.1 Create state classes
+#### 1.3.1 Create state classes
 
 ReactGenie provides you with two inbuilt classes that you can extend from for your state classes.
 1. **DataClass**: A DataClass is the basic unit for data management, and an instance of a DataClass can be viewed as a record in a database. 
@@ -153,7 +153,7 @@ To recap, a state class (<font color="red">`DataClass`</font>) in ReactGenie req
 * <font color="red">`@GenieProperty("{description of the property}")`</font>: properties that you want to expose to ReactGenie
 * <font color="red">`@GenieKey`</font>: a unique key for each instance of the class
 
-#### 2.3.2 State class management
+#### 1.3.2 State class management
 
 Now that we've defined our properties, we need to initialize these properties using a constructor. This is required for all the properties.
 
@@ -231,7 +231,7 @@ export class Counter extends DataClass{
 ```
 
 
-#### 2.3.3 Setup placeholder objects
+#### 1.3.3 Setup placeholder objects
 ReactGenie provides you with class initialization settings, where you can set static variables for the class or create placeholder objects.
 The setup() function is a static function of the GenieClass. You can override the setup function for initial program
  setup and can also make it empty. ReactGenie will automatically call the function to complete the initialization.
@@ -248,7 +248,7 @@ export class Counter extends DataClass{
     }
 }
 ```
-#### 2.3.4 Add you own functions
+#### 1.3.4 Add you own functions
 Next, you can create more functionalities for your class.
 For example, you can create functions to increment, decrement, and delete the counter. Don't forget to add ReactGenie decorators as these functions should be accessible to users via multimodal interactions.
 ```typescript filename="Counter.ts" {5, 6, 7, 8, 10, 11, 12, 13, 15, 16, 17, 18}
@@ -335,9 +335,9 @@ export class Counter extends DataClass{
 ```
 </details>
 
-### 2.4 Design UI Code
+### 1.4 Design UI Code
 
-#### 2.4.1 Write UI code
+#### 1.4.1 Write UI code
 Now we need to determine what to display in a Counter app and what kind of graphical UI to construct.
 The Counter app will comprise two pages, one dedicated to editing a specific Counter and the other designed to display the list of Counters.
 
@@ -571,7 +571,7 @@ return (
 export default App;
 ```
 
-#### 2.4.2 Page Management with AppNavigator
+#### 1.4.2 Page Management with AppNavigator
 You can see there are many TODOs in the code, they are the places for managing pages switch.
 Here we will use <font color="red">`AppNavigator`</font> to handle the switch between pages.
 <font color="red">`AppNavigator`</font> is just like a stack for pages, you can display the new page with <font color="red">`push()`</font>
@@ -740,7 +740,7 @@ export const EditCounterView = EditCounterViewImpl; //TODO: need to be linked
 Now we can run <font color ="red">`npx expo start --web`</font> to test the UI and 
 click the button to check whether we can get a new page. 
 
-### 2.5 Link State Code to UI
+### 1.5 Link State Code to UI
 
 After we complete the UI code and state code, we need to bind them together with **GenieClassInterface()** and 
 set up the initialization of ReactGenie. 
@@ -795,7 +795,7 @@ If we want to manually complete the initialization, call our initialization func
 export const reactGenieStore = initReactGenie();
 ```
 
-### 2.6 Add Examples and Test
+### 1.6 Add Examples and Test
 Finally, we need to add usage instances for your program to help ReactGenie correctly generate
 executable results using LLM. We need to provide examples of relevant function usage in each class.
 
