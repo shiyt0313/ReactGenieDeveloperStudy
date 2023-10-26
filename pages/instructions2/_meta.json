@@ -1,7 +1,7 @@
 {
-    "counter": "1. Tutorial: Counter app",
-    "timer": "2. Your turn: Timer app",
-    "survey": "3. Study Survey",
+    "intro": "1. Introduction",
+    "task": "2. GenieWizard: Plugin for Multimodal Apps",
+    "apps": "3. Your turn: Improve Apps",
     "questionnaire": "4. Questionnaire",
     "demographics": "5. Demographics Survey"
 }
