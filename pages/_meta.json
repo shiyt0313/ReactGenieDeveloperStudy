@@ -1,6 +1,7 @@
 {
     "index": "Welcome",
-    "instructions": "Instructions",
+    "instructions1": "Instructions: Study 1",
+    "instructions2": "Instructions: Study 2",
     "geniedoc": "*ReactGenie docs",
     "about": {
         "title": "About",
